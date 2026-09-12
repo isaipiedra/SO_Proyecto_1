@@ -12,6 +12,10 @@
         <property name="name">box_dnd_container</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="margin-start">100</property>
+        <property name="margin-end">100</property>
+        <property name="margin-top">100</property>
+        <property name="margin-bottom">100</property>
         <property name="label-xalign">0</property>
         <property name="shadow-type">none</property>
         <child>
@@ -21,6 +25,18 @@
             <property name="halign">center</property>
             <property name="valign">center</property>
             <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="pixbuf">images/download.png</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkLabel" id="lbl_initial_msg">
                 <property name="name">lbl_initial_msg</property>
@@ -35,7 +51,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -52,7 +68,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <style>

@@ -8,19 +8,31 @@
     <property name="default-width">440</property>
     <property name="default-height">250</property>
     <child>
-      <object class="GtkFrame">
+      <object class="GtkFrame" id="box_dnd_container">
+        <property name="name">box_dnd_container</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="label-xalign">0</property>
         <property name="shadow-type">none</property>
         <child>
-          <object class="GtkBox" id="box_dnd_container">
-            <property name="name">box_dnd_container</property>
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
             <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="pixbuf">images/download.png</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkLabel" id="lbl_initial_msg">
                 <property name="name">lbl_initial_msg</property>
@@ -35,7 +47,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">0</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -52,7 +64,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <style>
@@ -63,6 +75,9 @@
         <child type="label_item">
           <placeholder/>
         </child>
+        <style>
+          <class name="box_dnd_container"/>
+        </style>
       </object>
     </child>
   </object>
