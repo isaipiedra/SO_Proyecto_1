@@ -16,7 +16,22 @@ static void activate(GtkApplication *app) {
         return;
     }
 
+    //load the css
+    GtkCssProvider *css_provider = gtk_css_provider_new();
+    GError *css_error = NULL;
+    gtk_css_provider_load_from_path(css_provider, "styles.css", &css_error);
+    if(css_error){
+        g_warning("An error occurred while loading the css file");
+    }
+    gtk_style_context_add_provider_for_screen(
+        gdk_screen_get_default(),
+        GTK_STYLE_PROVIDER(css_provider),
+        GTK_STYLE_PROVIDER_PRIORITY_USER
+    );
+    g_object_unref(css_provider);
+
     window = GTK_WINDOW(gtk_builder_get_object(builder, "window"));
+    gtk_window_maximize(window);
     if (!window) {
         g_error("Failed to get window from builder");
         return;

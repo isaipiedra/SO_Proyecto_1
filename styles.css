@@ -1,0 +1,50 @@
+#btn_open_file_explorer{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+#btn_open_file_explorer{
+    background-image: none;
+    background-color: rgb(9, 76, 152);
+    color: white;
+    padding: 10px;
+    border-radius: 5;
+    border-width: 0;
+  	font-weight: bold;
+    font-size: 20px;
+}
+
+#lbl_initial_msg{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+#lbl_initial_msg{
+  	font-weight: bold;
+    font-size: 20px;
+}
+
+#box_dnd_container{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+#box_dnd_container{
+    background-color: #89c1d4;
+}

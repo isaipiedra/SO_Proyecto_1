@@ -8,45 +8,64 @@
     <property name="default-width">440</property>
     <property name="default-height">250</property>
     <child>
-      <!-- n-columns=3 n-rows=3 -->
-      <object class="GtkGrid" id="main">
+      <object class="GtkFrame" id="box_dnd_container">
+        <property name="name">box_dnd_container</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="label-xalign">0</property>
+        <property name="shadow-type">none</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Hola mundo</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="lbl_initial_msg">
+                <property name="name">lbl_initial_msg</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-bottom">10</property>
+                <property name="label" translatable="yes">Drag and drop your files or</property>
+                <style>
+                  <class name="lbl_initial_msg"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_open_file_explorer">
+                <property name="label" translatable="yes">Open file explorer</property>
+                <property name="name">btn_open_file_explorer</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <style>
+                  <class name="btn_open_file_explorer"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <style>
+              <class name="box_dnd_container"/>
+            </style>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
         </child>
-        <child>
+        <child type="label_item">
           <placeholder/>
         </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
-        <child>
-          <placeholder/>
-        </child>
+        <style>
+          <class name="box_dnd_container"/>
+        </style>
       </object>
     </child>
   </object>
