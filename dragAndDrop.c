@@ -12,13 +12,21 @@ static void add_file_to_collection(GFile* file, GHashTable* collection){
 }
 
 static GdkDragAction on_drag_enter(GtkDropTarget* target, double x, double y, gpointer data){
+    (void) data;
+    (void) x;
+    (void) y;
     GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(target));
     gtk_widget_add_css_class(widget, "box_dnd_container-hover");
+    return GDK_ACTION_COPY;
 }
 
 static GdkDragAction on_drag_leave(GtkDropTarget* target, double x, double y, gpointer data){
+    (void) data;
+    (void) x;
+    (void) y;
     GtkWidget *widget = gtk_event_controller_get_widget(GTK_EVENT_CONTROLLER(target));
     gtk_widget_remove_css_class(widget, "box_dnd_container-hover");
+    return GDK_ACTION_COPY;
 }
 
 static gboolean drop_files(
@@ -28,6 +36,10 @@ static gboolean drop_files(
     double y,
     gpointer user_data
 ){
+    //ignore not used parameters
+    (void) x;
+    (void) y;
+    (void) target;
     GHashTable* collection = user_data;
 
     if(G_VALUE_HOLDS(value, GDK_TYPE_FILE_LIST)){ //more than one file

@@ -91,3 +91,84 @@
     margin-right: 10px;
 
 }
+.folder-button{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-button{
+    margin-bottom: 10px;
+}
+.folder-icon{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-icon{
+    margin-right: 15px;
+}
+.file-row{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px; 
+}
+.file-row{
+    margin-bottom: 10px;
+}
+.file-icon{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.file-icon{
+    margin-right: 15px;
+}
+.folder-arrow{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-arrow{
+    padding: 5px;
+}
+.box_file_explorer{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.box_file_explorer{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: rgb(9, 76, 152);
+    margin-top: 100px;
+    margin-right: 100px;
+    margin-left: 0px;
+    margin-bottom: 100px;
+    padding: 20px;
+
+}

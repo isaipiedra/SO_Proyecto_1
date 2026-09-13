@@ -90,45 +90,12 @@
         <child>
           <object class="GtkScrolledWindow">
             <child>
-              <object class="GtkBox">
+              <object class="GtkBox" id="box_file_explorer">
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="height-request">500</property>
-                    <property name="label">This is a test</property>
-                  </object>
-                </child>
+                <style>
+                  <class name="box_file_explorer"/>
+                </style>
               </object>
             </child>
           </object>
