@@ -1,0 +1,174 @@
+.btn_open_file_explorer{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.btn_open_file_explorer{
+    background-image: none;
+    background-color: rgb(9, 76, 152);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 0px;
+  	font-weight: bold;
+    font-size: 20px;
+}
+
+.lbl_initial_msg{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.lbl_initial_msg{
+  	font-weight: normal;
+    font-size: 20px;
+}
+
+.box_dnd_container{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.box_dnd_container{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    border-style: dashed;
+    border-width: 5px;
+    border-color: rgb(9, 76, 152);
+    margin: 100px;
+}
+.box_dnd_container-hover{
+    background-color: rgb(175, 212, 254);
+    border-radius: 20px;
+    border-style: dashed;
+    border-width: 5px;
+    border-color: rgb(9, 76, 152);
+    margin: 100px;
+}
+.separator{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.separator{
+    background-color:  rgba(0, 0, 0, 0.5);
+    min-height: 1px;
+}
+
+.lbl_or{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.lbl_or{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+.folder-button{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-button{
+    margin-bottom: 10px;
+}
+.folder-icon{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-icon{
+    margin-right: 15px;
+}
+.file-row{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px; 
+}
+.file-row{
+    margin-bottom: 10px;
+}
+.file-icon{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.file-icon{
+    margin-right: 15px;
+}
+.folder-arrow{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.folder-arrow{
+    padding: 5px;
+}
+.box_file_explorer{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.box_file_explorer{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    border-width: 2px;
+    border-color: rgb(9, 76, 152);
+    margin-top: 100px;
+    margin-right: 100px;
+    margin-left: 0px;
+    margin-bottom: 100px;
+    padding: 20px;
+
+}
