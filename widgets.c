@@ -48,14 +48,30 @@ GtkWidget *create_file_widget(const char *name) {
     return row;
 }
 
+typedef struct {
+    GtkWidget* list;
+    GtkWidget* arrow;
+} ON_FOLDER_CLICKED_PARAMETERS;
+
 //hides the children
 static void on_folder_clicked(GtkButton *button, gpointer user_data) {
     (void)button;
-    GtkWidget *outer = GTK_WIDGET(user_data);
-    GtkWidget* header = gtk_widget_get_first_child(outer);
-    GtkWidget* list = gtk_widget_get_next_sibling(header);
+    ON_FOLDER_CLICKED_PARAMETERS* data = (ON_FOLDER_CLICKED_PARAMETERS*)user_data;
+    GtkWidget* list = data->list;
+    GtkWidget* arrow = data->arrow;
     gboolean visible = !gtk_widget_get_visible(list);
     gtk_widget_set_visible(list, visible);
+    if(visible){
+        gtk_picture_set_filename(GTK_PICTURE(arrow), "images/down.png");
+    }else{
+        gtk_picture_set_filename(GTK_PICTURE(arrow), "images/up.png");
+    }
+}
+
+//wrapper fuction that matches the singnature
+static void free_callback_data(gpointer data, GClosure *closure) {
+    (void) closure;
+    g_free(data);
 }
 
 GtkWidget *create_folder_widget(const char *name, GList *children, int depth) {
@@ -104,8 +120,10 @@ GtkWidget *create_folder_widget(const char *name, GList *children, int depth) {
     gtk_box_append(GTK_BOX(indent_row), list_files);
     gtk_box_append(GTK_BOX(outer), indent_row);
 
-    gtk_widget_set_visible(list_files, TRUE);
-    g_signal_connect(button, "clicked", G_CALLBACK(on_folder_clicked), outer);
+    ON_FOLDER_CLICKED_PARAMETERS* parameters = g_new0(ON_FOLDER_CLICKED_PARAMETERS, 1);
+    parameters->arrow = arrow;
+    parameters->list = list_files;
+    g_signal_connect_data(button, "clicked", G_CALLBACK(on_folder_clicked), parameters, free_callback_data, 0);
 
     return outer;
 }
