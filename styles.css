@@ -1,50 +1,93 @@
-#btn_open_file_explorer{
+.btn_open_file_explorer{
     background-image: none;
     background-color: transparent;
     border: none;
-    border-radius: 0;
+    border-radius: 0px;
     box-shadow: none;
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
 }
 
-#btn_open_file_explorer{
+.btn_open_file_explorer{
     background-image: none;
     background-color: rgb(9, 76, 152);
     color: white;
     padding: 10px;
-    border-radius: 5;
-    border-width: 0;
+    border-radius: 5px;
+    border-width: 0px;
   	font-weight: bold;
     font-size: 20px;
 }
 
-#lbl_initial_msg{
+.lbl_initial_msg{
     background-image: none;
     background-color: transparent;
     border: none;
-    border-radius: 0;
+    border-radius: 0px;
     box-shadow: none;
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
 }
 
-#lbl_initial_msg{
-  	font-weight: bold;
+.lbl_initial_msg{
+  	font-weight: normal;
     font-size: 20px;
 }
 
-#box_dnd_container{
+.box_dnd_container{
     background-image: none;
     background-color: transparent;
     border: none;
-    border-radius: 0;
+    border-radius: 0px;
     box-shadow: none;
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
 }
 
+.box_dnd_container{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    border-style: dashed;
+    border-width: 5px;
+    border-color: rgb(9, 76, 152);
+    margin: 100px;
+}
+.box_dnd_container-hover{
+    background-color: rgb(175, 212, 254);
+    border-radius: 20px;
+    border-style: dashed;
+    border-width: 5px;
+    border-color: rgb(9, 76, 152);
+    margin: 100px;
+}
+.separator{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
 
-#box_dnd_container{
-    background-color: #89c1d4;
+.separator{
+    background-color:  rgba(0, 0, 0, 0.5);
+    min-height: 1px;
+}
+
+.lbl_or{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.lbl_or{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+
 }

@@ -1,45 +1,48 @@
-#include <stdlib.h>
-#include <gtk/gtk.h>
-#include <math.h>
-#include <unistd.h>
-#include <time.h>
-#include <stdbool.h>
+#include "dragAndDrop.h"
 
 GtkBuilder *builder;
-GtkWindow *window;
+
+static GHashTable* dropped_files = NULL;
+
+static void set_up_widgets(GtkBuilder* builder){
+    // ------------- drag and drop area -------------
+
+    dropped_files = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    GtkWidget *dnd_box = GTK_WIDGET(gtk_builder_get_object(builder, "box_dnd_container"));
+    set_drop_in_box(dnd_box, dropped_files);
+}
 
 static void activate(GtkApplication *app) {
-   
-    builder = gtk_builder_new_from_file("build.glade");
-    if (!builder) {
-        g_error("Failed to load Glade file");
-        return;
-    }
 
     //load the css
     GtkCssProvider *css_provider = gtk_css_provider_new();
-    GError *css_error = NULL;
-    gtk_css_provider_load_from_path(css_provider, "styles.css", &css_error);
-    if(css_error){
-        g_warning("An error occurred while loading the css file");
-    }
-    gtk_style_context_add_provider_for_screen(
-        gdk_screen_get_default(),
+    gtk_css_provider_load_from_path(css_provider, "styles.css");
+    gtk_style_context_add_provider_for_display(
+        gdk_display_get_default(),
         GTK_STYLE_PROVIDER(css_provider),
         GTK_STYLE_PROVIDER_PRIORITY_USER
     );
     g_object_unref(css_provider);
 
-    window = GTK_WINDOW(gtk_builder_get_object(builder, "window"));
-    gtk_window_maximize(window);
+    //create builder from Cambalache
+    GtkBuilder *builder = gtk_builder_new();
+    gtk_builder_add_from_file(builder, "builder.ui", NULL);
+
+    GObject* window = gtk_builder_get_object(builder, "window");
     if (!window) {
         g_error("Failed to get window from builder");
         return;
     }
+    gtk_window_maximize(GTK_WINDOW(window));
+
+    set_up_widgets(builder);
     
-    gtk_window_set_application(window, GTK_APPLICATION(app));
-    gtk_widget_show_all(GTK_WIDGET(window));
+    gtk_window_set_application(GTK_WINDOW(window), app);
+    gtk_widget_set_visible(GTK_WIDGET(window), TRUE);
+
+    g_object_unref(builder);
 }
+
 
 int main(int argc, char *argv[]) {
     GtkApplication *app = gtk_application_new("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);

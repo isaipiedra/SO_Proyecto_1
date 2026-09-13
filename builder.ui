@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 1.0.3 -->
+<interface>
+  <!-- interface-name builder.ui -->
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkWindow" id="window">
+    <property name="default-height">250</property>
+    <property name="default-width">440</property>
+    <child>
+      <object class="GtkBox">
+        <child>
+          <object class="GtkFrame" id="box_dnd_container">
+            <property name="label-xalign">0</property>
+            <property name="name">box_dnd_container</property>
+            <child>
+              <object class="GtkBox" id="box_container01">
+                <property name="halign">center</property>
+                <property name="name">box_container01</property>
+                <property name="orientation">vertical</property>
+                <property name="valign">center</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="file">images/download.png</property>
+                    <property name="height-request">128</property>
+                    <property name="margin-bottom">10</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lbl_initial_msg">
+                    <property name="label" translatable="yes">Drag and drop your files or</property>
+                    <property name="name">lbl_initial_msg</property>
+                    <style>
+                      <class name="lbl_initial_msg"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkSeparator" id="separator_2">
+                        <property name="hexpand">True</property>
+                        <property name="opacity">0.5</property>
+                        <property name="valign">center</property>
+                        <style>
+                          <class name="separator"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="lbl_or">
+                        <property name="label" translatable="yes">OR</property>
+                        <property name="name">lbl_or</property>
+                        <style>
+                          <class name="lbl_or"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator" id="separator_1">
+                        <property name="hexpand">True</property>
+                        <property name="opacity">0.5</property>
+                        <property name="valign">center</property>
+                        <style>
+                          <class name="separator"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btn_open_file_explorer">
+                    <property name="label" translatable="yes">Browse</property>
+                    <property name="name">btn_open_file_explorer</property>
+                    <style>
+                      <class name="btn_open_file_explorer"/>
+                    </style>
+                  </object>
+                </child>
+                <style>
+                  <class name="box_container01"/>
+                </style>
+              </object>
+            </child>
+            <style>
+              <class name="box_dnd_container"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <child>
+              <object class="GtkBox">
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="height-request">500</property>
+                    <property name="label">This is a test</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
