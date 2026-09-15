@@ -1,4 +1,5 @@
-#include "widgets.h"
+#include "fileExplorer.h"
+#include "utils.h"
 
 // helpers
 
@@ -68,12 +69,6 @@ static void on_folder_clicked(GtkButton *button, gpointer user_data) {
     }
 }
 
-//wrapper fuction that matches the singnature
-static void free_callback_data(gpointer data, GClosure *closure) {
-    (void) closure;
-    g_free(data);
-}
-
 GtkWidget *create_folder_widget(const char *name, GList *children, int depth) {
     
     // header
@@ -139,3 +134,111 @@ GtkWidget *build_node_widget(FileNode *node, int depth) {
             return gtk_label_new("?");
     }
 }
+
+FileNode *build_node_from_path(const char *path, const char *name) {
+    if (g_file_test(path, G_FILE_TEST_IS_DIR)) {
+        GList *children = NULL;
+        GError *error = NULL;
+        GDir *dir = g_dir_open(path, 0, &error);
+ 
+        if (!dir) {
+            g_warning("No se pudo abrir el directorio '%s': %s",
+                      path, error ? error->message : "razón desconocida");
+            g_clear_error(&error);
+            return file_node_new_folder(name, NULL);
+        }
+ 
+        const char *entry_name;
+        while ((entry_name = g_dir_read_name(dir)) != NULL) {
+            char *child_path = g_build_filename(path, entry_name, NULL);
+            children = g_list_append(children, build_node_from_path(child_path, entry_name));
+            g_free(child_path);
+        }
+        g_dir_close(dir);
+ 
+        return file_node_new_folder(name, children);
+    }
+ 
+    return file_node_new_file(name);
+}
+
+void build_file_hierarchy_widget(GHashTable* collection, GtkWidget* file_explorer){
+    FileNode* root = build_tree_from_hashtable(collection);
+    GtkWidget* tree_widget = build_node_widget(root, 0);
+
+    GtkWidget* box_file_explorer = gtk_widget_get_first_child(file_explorer); //scroll
+    box_file_explorer = gtk_widget_get_first_child(box_file_explorer); //viewport
+    box_file_explorer = gtk_widget_get_first_child(box_file_explorer); //box
+
+    clear_box(GTK_BOX(box_file_explorer));
+    gtk_box_append(GTK_BOX(box_file_explorer), tree_widget);
+    
+    gtk_widget_set_visible(file_explorer, TRUE);
+}
+ 
+FileNode *build_tree_from_hashtable(GHashTable *files) {
+    GList *children = NULL;
+    GHashTableIter iter;
+    gpointer key, value;
+ 
+    g_hash_table_iter_init(&iter, files);
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        (void)value; /* no se usa: el valor del hash table se ignora aquí */
+        const char *path = (const char *)key; /* la key YA es la ruta completa */
+ 
+        char *name = g_path_get_basename(path);
+        children = g_list_append(children, build_node_from_path(path, name));
+        g_free(name);
+    }
+ 
+    return file_node_new_folder("output", children);
+}
+
+static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
+    GtkFileDialog* dialog = GTK_FILE_DIALOG(source);
+    GError* error = NULL;
+    GListModel* file_list = gtk_file_dialog_select_multiple_folders_finish(dialog, result, &error);
+    OPEN_FILE_DIALOG_PARAMETERS* params = user_data;
+    GHashTable* collection = params->collection;
+    GtkWidget* file_explorer = params->file_explorer;
+
+    //cleans the files everytime a new one is dropped
+    g_hash_table_remove_all(collection);
+
+    if(!file_list){
+        return;
+    }
+
+    int index = 0;
+    gpointer file = NULL;
+
+    while ((file = g_list_model_get_item(file_list, index)) != NULL){
+        printf("file name:%s\n", g_file_get_basename(G_FILE(file)));
+        add_file_to_collection(G_FILE(file), collection);
+        index++;
+    }
+
+    if (error) {
+        g_error_free(error);
+        return;
+    }
+
+    build_file_hierarchy_widget(collection, file_explorer);
+}
+
+void open_file_dialog(GtkButton* button, gpointer user_data) {
+
+    (void) button;
+
+    OPEN_FILE_DIALOG_PARAMETERS* parameters = (OPEN_FILE_DIALOG_PARAMETERS*) user_data;
+    if (!GTK_IS_FILE_DIALOG(parameters->dialog)) {
+        g_print("not a file dialog\n");
+        return;
+    }
+    gtk_file_dialog_select_multiple_folders(parameters->dialog,
+                         parameters->window,
+                         NULL,                
+                         on_file_open_ready,
+                         parameters);         
+}
+
