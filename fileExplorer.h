@@ -27,4 +27,22 @@ GtkWidget* create_folder_widget(const char* name, GList* children, int depth);
 // based on node type 
 GtkWidget* build_node_widget(FileNode* node, int depth);
 
+//tree handlers
+FileNode *build_tree_from_hashtable(GHashTable *files);
+FileNode *build_node_from_path(const char *path, const char *name);
+
+//widget constructor
+void build_file_hierarchy_widget(GHashTable* collection, GtkWidget* file_explorer);
+
+typedef struct{
+    GtkFileDialog* dialog;
+    GtkWindow* window;
+    GHashTable* collection;
+    GtkWidget* file_explorer;
+    char* selected_file;
+}OPEN_FILE_DIALOG_PARAMETERS;
+
+//file dialog
+void open_file_dialog(GtkButton* button, gpointer user_data);
+
 #endif

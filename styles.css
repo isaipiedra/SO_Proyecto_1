@@ -50,6 +50,7 @@
     border-style: dashed;
     border-width: 5px;
     border-color: rgb(9, 76, 152);
+    padding: 50px;
     margin: 100px;
 }
 .box_dnd_container-hover{
@@ -162,13 +163,28 @@
 }
 .box_file_explorer{
     background-color: rgb(213, 231, 253);
-    border-radius: 20px;
     border-width: 2px;
     border-color: rgb(9, 76, 152);
-    margin-top: 100px;
-    margin-right: 100px;
     margin-left: 0px;
+}
+.box_file_explorer_container{
+    background-image: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    box-shadow: none;
+    padding: 0px;
+    margin: 0px;
+}
+.box_file_explorer_container{
+    background-color: rgb(213, 231, 253);
+    margin-top: 100px;
     margin-bottom: 100px;
+    margin-right: 100px;
+    border-radius: 20px;
     padding: 20px;
-
+}
+box_file_explorer_container scroll_file_explorer > viewport,
+box_file_explorer_container scroll_file_explorer > widget {
+    border-radius: 0;
 }

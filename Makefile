@@ -2,7 +2,7 @@
 CC = gcc
 
 # Source files
-SRC = main.c dragAndDrop.c widgets.c
+SRC = main.c dragAndDrop.c fileExplorer.c utils.c
 
 # Output executable
 TARGET = proyecto_1

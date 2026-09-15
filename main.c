@@ -1,16 +1,42 @@
 #include "dragAndDrop.h"
-#include "widgets.h"
+#include "fileExplorer.h"
+#include "utils.h"
 
 GtkBuilder *builder;
 
-static GHashTable* dropped_files = NULL;
+static GHashTable* file_collection = NULL;
+GObject* window = NULL;
+static GtkFileDialog* file_dialog = NULL;
 
 static void set_up_widgets(GtkBuilder* builder){
+
+    // ------------- file explorer -------------
+
+    //set file explorer invisible 
+    GObject* box_file_explorer_container = gtk_builder_get_object(builder, "box_file_explorer_container");
+    gtk_widget_set_visible(GTK_WIDGET(box_file_explorer_container), FALSE);
+
     // ------------- drag and drop area -------------
 
-    dropped_files = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    file_collection = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     GtkWidget *dnd_box = GTK_WIDGET(gtk_builder_get_object(builder, "box_dnd_container"));
-    set_drop_in_box(dnd_box, dropped_files);
+    set_drop_in_box(dnd_box, file_collection, GTK_WIDGET(box_file_explorer_container));
+
+    // ------------- browse button -------------
+    
+    file_dialog = gtk_file_dialog_new();
+    char* result_file = NULL;
+    GObject* btn_browse = gtk_builder_get_object(builder, "btn_open_file_explorer");
+    OPEN_FILE_DIALOG_PARAMETERS* open_file_dialog_parameters = g_new0(OPEN_FILE_DIALOG_PARAMETERS, 1); 
+    
+    open_file_dialog_parameters->dialog = file_dialog;
+    open_file_dialog_parameters->window = GTK_WINDOW(window);
+    open_file_dialog_parameters->selected_file = result_file;
+    open_file_dialog_parameters->collection = file_collection;
+    open_file_dialog_parameters->file_explorer = GTK_WIDGET(box_file_explorer_container);
+
+
+    g_signal_connect_data(btn_browse, "clicked", G_CALLBACK(open_file_dialog), open_file_dialog_parameters, free_callback_data, 0);
 }
 
 static void activate(GtkApplication *app) {
@@ -29,7 +55,7 @@ static void activate(GtkApplication *app) {
     GtkBuilder *builder = gtk_builder_new();
     gtk_builder_add_from_file(builder, "UI/builder.ui", NULL);
 
-    GObject* window = gtk_builder_get_object(builder, "window");
+    window = gtk_builder_get_object(builder, "window");
     if (!window) {
         g_error("Failed to get window from builder");
         return;
@@ -37,19 +63,6 @@ static void activate(GtkApplication *app) {
     gtk_window_maximize(GTK_WINDOW(window));
 
     set_up_widgets(builder);
-
-    GObject* box_file_list = gtk_builder_get_object(builder, "box_file_explorer");
-
-    GList *inner_files = NULL;
-    inner_files = g_list_append(inner_files, file_node_new_file("readme.txt"));
-
-    GList *root_children = NULL;
-    root_children = g_list_append(root_children, file_node_new_folder("subfolder", inner_files));
-    root_children = g_list_append(root_children, file_node_new_file("notes.txt"));
-
-    FileNode* root = file_node_new_folder("Output", root_children);
-    GtkWidget* tree_widget = build_node_widget(root, 0);
-    gtk_box_append(GTK_BOX(box_file_list), tree_widget);
     
     gtk_window_set_application(GTK_WINDOW(window), app);
     gtk_widget_set_visible(GTK_WIDGET(window), TRUE);

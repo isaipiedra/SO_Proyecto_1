@@ -70,7 +70,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_open_file_explorer">
-                    <property name="label" translatable="yes">Browse</property>
+                    <property name="label" translatable="yes">Browse Directory</property>
                     <property name="name">btn_open_file_explorer</property>
                     <style>
                       <class name="btn_open_file_explorer"/>
@@ -88,16 +88,26 @@
           </object>
         </child>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox" id="box_file_explorer_container">
             <child>
-              <object class="GtkBox" id="box_file_explorer">
-                <property name="hexpand">True</property>
-                <property name="orientation">vertical</property>
+              <object class="GtkScrolledWindow" id="scroll_file_explorer">
+                <child>
+                  <object class="GtkBox" id="box_file_explorer">
+                    <property name="hexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <style>
+                      <class name="box_file_explorer"/>
+                    </style>
+                  </object>
+                </child>
                 <style>
-                  <class name="box_file_explorer"/>
+                  <class name="scroll_file_explorer"/>
                 </style>
               </object>
             </child>
+            <style>
+              <class name="box_file_explorer_container"/>
+            </style>
           </object>
         </child>
       </object>
