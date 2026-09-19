@@ -1,5 +1,6 @@
 #include "dragAndDrop.h"
 #include "fileExplorer.h"
+#include "outputNameEntry.h"
 #include "utils.h"
 
 GtkBuilder *builder;
@@ -7,6 +8,8 @@ GtkBuilder *builder;
 static GHashTable* file_collection = NULL;
 GObject* window = NULL;
 static GtkFileDialog* file_dialog = NULL;
+
+extern GtkLabel* lbl_output_folder_name;
 
 static void set_up_widgets(GtkBuilder* builder){
 
@@ -35,8 +38,18 @@ static void set_up_widgets(GtkBuilder* builder){
     open_file_dialog_parameters->collection = file_collection;
     open_file_dialog_parameters->file_explorer = GTK_WIDGET(box_file_explorer_container);
 
+    g_signal_connect_data(
+        btn_browse, "clicked", 
+        G_CALLBACK(open_file_dialog), 
+        open_file_dialog_parameters, 
+        free_callback_data, 0
+    );
 
-    g_signal_connect_data(btn_browse, "clicked", G_CALLBACK(open_file_dialog), open_file_dialog_parameters, free_callback_data, 0);
+    // ------------- entry for output folder name -------------
+
+    GObject* entry_output_name = gtk_builder_get_object(builder, "entry_output_name");
+    g_signal_connect(entry_output_name, "changed", G_CALLBACK(on_update_output_entry), &lbl_output_folder_name);
+
 }
 
 static void activate(GtkApplication *app) {

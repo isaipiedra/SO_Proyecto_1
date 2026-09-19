@@ -1,4 +1,18 @@
-.btn_open_file_explorer{
+.btn_open_file_explorer, 
+.btn_compile,
+.lbl_initial_msg,
+.box_dnd_container,
+.separator,
+.lbl_or,
+.folder-button,
+.folder-icon,
+.file-row,
+.file-icon,
+.folder-arrow,
+.box_file_explorer_container,
+.box_file_explorer,
+.box_output_name
+{
     background-image: none;
     background-color: transparent;
     border: none;
@@ -8,7 +22,7 @@
     margin: 0px;
 }
 
-.btn_open_file_explorer{
+.btn_open_file_explorer, .btn_compile{
     background-image: none;
     background-color: rgb(9, 76, 152);
     color: white;
@@ -19,29 +33,14 @@
     font-size: 20px;
 }
 
-.lbl_initial_msg{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
+.btn_compile{
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-right: 17px;
 }
-
 .lbl_initial_msg{
   	font-weight: normal;
     font-size: 20px;
-}
-
-.box_dnd_container{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
 }
 
 .box_dnd_container{
@@ -61,15 +60,6 @@
     border-color: rgb(9, 76, 152);
     margin: 100px;
 }
-.separator{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
 
 .separator{
     background-color:  rgba(0, 0, 0, 0.5);
@@ -77,105 +67,40 @@
 }
 
 .lbl_or{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
-.lbl_or{
     margin-top: 15px;
     margin-bottom: 15px;
     margin-left: 10px;
     margin-right: 10px;
 
 }
-.folder-button{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-button{
     margin-bottom: 10px;
 }
-.folder-icon{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-icon{
     margin-right: 15px;
 }
-.file-row{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px; 
-}
+
 .file-row{
     margin-bottom: 10px;
 }
-.file-icon{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .file-icon{
     margin-right: 15px;
 }
-.folder-arrow{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-arrow{
     padding: 5px;
 }
-.box_file_explorer{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .box_file_explorer{
     background-color: rgb(213, 231, 253);
     border-width: 2px;
     border-color: rgb(9, 76, 152);
     margin-left: 0px;
 }
-.box_file_explorer_container{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .box_file_explorer_container{
     background-color: rgb(213, 231, 253);
     margin-top: 100px;
@@ -184,7 +109,8 @@
     border-radius: 20px;
     padding: 20px;
 }
-box_file_explorer_container scroll_file_explorer > viewport,
-box_file_explorer_container scroll_file_explorer > widget {
-    border-radius: 0;
+
+.box_output_name{
+    margin-top: 10px;
+    margin-bottom: 20px;
 }

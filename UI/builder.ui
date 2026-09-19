@@ -89,8 +89,11 @@
         </child>
         <child>
           <object class="GtkBox" id="box_file_explorer_container">
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkScrolledWindow" id="scroll_file_explorer">
+                <property name="min-content-width">300</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkBox" id="box_file_explorer">
                     <property name="hexpand">True</property>
@@ -102,6 +105,63 @@
                 </child>
                 <style>
                   <class name="scroll_file_explorer"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="box_output_name">
+                <property name="valign">end</property>
+                <child>
+                  <object class="GtkButton" id="btn_output_browse_dir">
+                    <child>
+                      <object class="GtkImage">
+                        <property name="file">images/folder.png</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="btn_output_browse_dir"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="entry_output_name">
+                    <property name="hexpand">True</property>
+                    <property name="placeholder-text">output</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label">.jix</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="box_output_name"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_compile">
+                <property name="halign">end</property>
+                <child>
+                  <object class="GtkBox" id="box_compile">
+                    <property name="spacing">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Compile</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="file">images/right-arrow.png</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="box_compile"/>
+                    </style>
+                  </object>
+                </child>
+                <style>
+                  <class name="btn_compile"/>
                 </style>
               </object>
             </child>
