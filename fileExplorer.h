@@ -5,7 +5,8 @@
 
 typedef enum {
     NODE_FILE,
-    NODE_FOLDER
+    NODE_FOLDER,
+    NODE_ROOT
 } NodeType;
 
 /* a node in the file tree. For folder children is a list of

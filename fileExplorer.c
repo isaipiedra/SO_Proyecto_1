@@ -1,6 +1,9 @@
 #include "fileExplorer.h"
 #include "utils.h"
 
+#define OUTPUT_FOLDER_DEFAULT_NAME "Output"
+
+GtkLabel* lbl_output_folder_name;
 // helpers
 
 FileNode *file_node_new_file(const char *name) {
@@ -15,6 +18,14 @@ FileNode *file_node_new_folder(const char *name, GList *children) {
     FileNode *node = g_new0(FileNode, 1);
     node->type = NODE_FOLDER;
     node->name = g_strdup(name);
+    node->children = children;
+    return node;
+}
+
+FileNode *file_node_new_root(GList *children) {
+    FileNode *node = g_new0(FileNode, 1);
+    node->type = NODE_ROOT;
+    node->name = OUTPUT_FOLDER_DEFAULT_NAME;
     node->children = children;
     return node;
 }
@@ -123,12 +134,27 @@ GtkWidget *create_folder_widget(const char *name, GList *children, int depth) {
     return outer;
 }
 
+GtkWidget* create_root_widget(const char *name, GList *children, int depth){
+    GtkWidget* result = create_folder_widget(name, children, depth);
+    GtkWidget* holder = gtk_widget_get_first_child(result); // button
+    holder = gtk_widget_get_first_child(holder); // header
+    holder = gtk_widget_get_first_child(holder); // arrow
+    holder = gtk_widget_get_next_sibling(holder); // icon
+    holder = gtk_widget_get_next_sibling(holder); // label
+
+    lbl_output_folder_name = GTK_LABEL(holder);
+
+    return result;
+}
+
 GtkWidget *build_node_widget(FileNode *node, int depth) {
     switch (node->type) {
         case NODE_FILE:
             return create_file_widget(node->name);
         case NODE_FOLDER:
             return create_folder_widget(node->name, node->children, depth);
+        case NODE_ROOT:
+            return create_root_widget(node->name, node->children, depth);
         default:
             g_warn_if_reached();
             return gtk_label_new("?");
@@ -183,15 +209,15 @@ FileNode *build_tree_from_hashtable(GHashTable *files) {
  
     g_hash_table_iter_init(&iter, files);
     while (g_hash_table_iter_next(&iter, &key, &value)) {
-        (void)value; /* no se usa: el valor del hash table se ignora aquí */
-        const char *path = (const char *)key; /* la key YA es la ruta completa */
+        (void)value;
+        const char *path = (const char *)key;
  
         char *name = g_path_get_basename(path);
         children = g_list_append(children, build_node_from_path(path, name));
         g_free(name);
     }
  
-    return file_node_new_folder("output", children);
+    return file_node_new_root(children);
 }
 
 static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
@@ -213,7 +239,6 @@ static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer u
     gpointer file = NULL;
 
     while ((file = g_list_model_get_item(file_list, index)) != NULL){
-        printf("file name:%s\n", g_file_get_basename(G_FILE(file)));
         add_file_to_collection(G_FILE(file), collection);
         index++;
     }
