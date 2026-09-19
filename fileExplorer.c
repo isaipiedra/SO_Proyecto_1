@@ -1,7 +1,7 @@
 #include "fileExplorer.h"
 #include "utils.h"
 
-#define OUTPUT_FOLDER_DEFAULT_NAME "Output"
+
 
 GtkLabel* lbl_output_folder_name;
 // helpers

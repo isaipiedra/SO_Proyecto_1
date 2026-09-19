@@ -50,6 +50,22 @@ static void set_up_widgets(GtkBuilder* builder){
     GObject* entry_output_name = gtk_builder_get_object(builder, "entry_output_name");
     g_signal_connect(entry_output_name, "changed", G_CALLBACK(on_update_output_entry), &lbl_output_folder_name);
 
+    GtkEventController* output_entry_focus_controller = gtk_event_controller_focus_new();
+    ON_OUTPUT_ENTRY_FOCUS_LEAVE_PARAMETERS* on_focus_leave_params = g_new0(ON_OUTPUT_ENTRY_FOCUS_LEAVE_PARAMETERS, 1);
+    on_focus_leave_params->entry = GTK_ENTRY(entry_output_name);
+    on_focus_leave_params->folder_name = &lbl_output_folder_name; 
+
+    g_signal_connect_data(
+        output_entry_focus_controller, 
+        "leave", 
+        G_CALLBACK(on_output_entry_focus_leave), 
+        on_focus_leave_params,
+        free_callback_data,
+        0
+    );
+
+    gtk_widget_add_controller(GTK_WIDGET(entry_output_name), output_entry_focus_controller);
+
 }
 
 static void activate(GtkApplication *app) {
