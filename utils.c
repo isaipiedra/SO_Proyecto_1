@@ -1,6 +1,7 @@
-#include "utils.h"
 #include <stdbool.h>
 #include <string.h>
+#include <sys/stat.h>
+#include "utils.h"
 
 void free_callback_data(gpointer data, GClosure *closure) {
     (void) closure;
@@ -55,6 +56,57 @@ bool is_valid_file_name(const char* name) {
         if (strchr(invalid_chars, c) != NULL) {
             return false;
         }
+    }
+
+    return true;
+}
+
+static bool directory_exists(const char* path) {
+    struct stat st;
+
+    if (stat(path, &st) != 0) {
+        return false;
+    }
+
+    return S_ISDIR(st.st_mode);
+}
+
+bool is_valid_file_path(const char* path) {
+    if (path == NULL) {
+        return false;
+    }
+
+    char path_copy[512];
+    size_t len = strlen(path);
+
+    if (len == 0 || len >= sizeof(path_copy)) {
+        return false;
+    }
+
+    strcpy(path_copy, path);
+
+    // separate the filename from the path
+    char* last_slash = strrchr(path_copy, '/');
+
+    char* file_name;
+    char* dir_path;
+
+    if (last_slash == NULL) {
+        // theres is no directory
+        file_name = path_copy;
+        dir_path = NULL;
+    } else {
+        *last_slash = '\0';       // cuts in the last '/'
+        dir_path = path_copy;     // starts before the last '/'
+        file_name = last_slash + 1; // starts after the last '/'
+    }
+
+    if (!is_valid_file_name(file_name)) {
+        return false;
+    }
+
+    if (dir_path != NULL && !directory_exists(dir_path)) {
+        return false;
     }
 
     return true;

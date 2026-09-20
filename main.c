@@ -13,6 +13,8 @@ extern GtkLabel* lbl_output_folder_name;
 
 static void set_up_widgets(GtkBuilder* builder){
 
+    GdkCursor* pointer_cursor = gdk_cursor_new_from_name("pointer", NULL);
+
     // ------------- file explorer -------------
 
     //set file explorer invisible 
@@ -30,7 +32,7 @@ static void set_up_widgets(GtkBuilder* builder){
     file_dialog = gtk_file_dialog_new();
     char* result_file = NULL;
     GObject* btn_browse = gtk_builder_get_object(builder, "btn_open_file_explorer");
-    OPEN_FILE_DIALOG_PARAMETERS* open_file_dialog_parameters = g_new0(OPEN_FILE_DIALOG_PARAMETERS, 1); 
+    BROWSE_FOR_DIR_PARAMETERS* open_file_dialog_parameters = g_new0(BROWSE_FOR_DIR_PARAMETERS, 1); 
     
     open_file_dialog_parameters->dialog = file_dialog;
     open_file_dialog_parameters->window = GTK_WINDOW(window);
@@ -40,10 +42,12 @@ static void set_up_widgets(GtkBuilder* builder){
 
     g_signal_connect_data(
         btn_browse, "clicked", 
-        G_CALLBACK(open_file_dialog), 
+        G_CALLBACK(browse_for_dir), 
         open_file_dialog_parameters, 
         free_callback_data, 0
     );
+
+    gtk_widget_set_cursor(GTK_WIDGET(btn_browse), pointer_cursor);
 
     // ------------- entry for output folder name -------------
 
@@ -54,6 +58,8 @@ static void set_up_widgets(GtkBuilder* builder){
     ON_OUTPUT_ENTRY_FOCUS_LEAVE_PARAMETERS* on_focus_leave_params = g_new0(ON_OUTPUT_ENTRY_FOCUS_LEAVE_PARAMETERS, 1);
     on_focus_leave_params->entry = GTK_ENTRY(entry_output_name);
     on_focus_leave_params->folder_name = &lbl_output_folder_name; 
+    on_focus_leave_params->window = GTK_WINDOW(window); 
+
 
     g_signal_connect_data(
         output_entry_focus_controller, 
@@ -65,6 +71,33 @@ static void set_up_widgets(GtkBuilder* builder){
     );
 
     gtk_widget_add_controller(GTK_WIDGET(entry_output_name), output_entry_focus_controller);
+
+    // ------------- compile button -------------
+
+    GObject* btn_compile = gtk_builder_get_object(builder, "btn_compile");
+    gtk_widget_set_cursor(GTK_WIDGET(btn_compile), pointer_cursor);
+
+    // ------------- button to select output dir -------------
+
+    GtkFileDialog* output_name_file_dialog = gtk_file_dialog_new();
+    char* result_output_dir = NULL;
+    GObject* btn_output_browse_dir = gtk_builder_get_object(builder, "btn_output_browse_dir");
+    BROWSE_FOR_OUTPUT_DIR_PARAMETERS* browse_for_output_dir_parameters = g_new0(BROWSE_FOR_OUTPUT_DIR_PARAMETERS, 1); 
+    
+    browse_for_output_dir_parameters->dialog = output_name_file_dialog;
+    browse_for_output_dir_parameters->window = GTK_WINDOW(window);
+    browse_for_output_dir_parameters->selected_file = result_output_dir;
+    browse_for_output_dir_parameters->output_entry = GTK_ENTRY(entry_output_name);
+
+    g_signal_connect_data(
+        btn_output_browse_dir, "clicked", 
+        G_CALLBACK(browse_for_output_dir), 
+        browse_for_output_dir_parameters, 
+        free_callback_data, 0
+    );
+
+    gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir), pointer_cursor);
+    
 
 }
 
