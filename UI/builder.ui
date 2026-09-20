@@ -70,7 +70,7 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_open_file_explorer">
-                    <property name="label" translatable="yes">Browse Directory</property>
+                    <property name="label" translatable="yes">Browse for Directory</property>
                     <property name="name">btn_open_file_explorer</property>
                     <style>
                       <class name="btn_open_file_explorer"/>
