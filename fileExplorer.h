@@ -35,15 +35,23 @@ FileNode *build_node_from_path(const char *path, const char *name);
 //widget constructor
 void build_file_hierarchy_widget(GHashTable* collection, GtkWidget* file_explorer);
 
+//file dialog
 typedef struct{
     GtkFileDialog* dialog;
     GtkWindow* window;
     GHashTable* collection;
     GtkWidget* file_explorer;
     char* selected_file;
-}OPEN_FILE_DIALOG_PARAMETERS;
+}BROWSE_FOR_DIR_PARAMETERS;
 
-//file dialog
-void open_file_dialog(GtkButton* button, gpointer user_data);
+void browse_for_dir(GtkButton* button, gpointer user_data);
+
+typedef struct{
+    GtkFileDialog* dialog;
+    GtkWindow* window;
+    char* selected_file;
+    GtkEntry* output_entry;
+}BROWSE_FOR_OUTPUT_DIR_PARAMETERS;
+void browse_for_output_dir(GtkButton* button, gpointer user_data);
 
 #endif

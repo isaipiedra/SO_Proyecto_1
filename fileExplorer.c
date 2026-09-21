@@ -1,7 +1,7 @@
 #include "fileExplorer.h"
 #include "utils.h"
 
-#define OUTPUT_FOLDER_DEFAULT_NAME "Output"
+
 
 GtkLabel* lbl_output_folder_name;
 // helpers
@@ -223,25 +223,19 @@ FileNode *build_tree_from_hashtable(GHashTable *files) {
 static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
     GtkFileDialog* dialog = GTK_FILE_DIALOG(source);
     GError* error = NULL;
-    GListModel* file_list = gtk_file_dialog_select_multiple_folders_finish(dialog, result, &error);
-    OPEN_FILE_DIALOG_PARAMETERS* params = user_data;
+    GFile* file = gtk_file_dialog_select_folder_finish(dialog, result, &error);
+    BROWSE_FOR_DIR_PARAMETERS* params = user_data;
     GHashTable* collection = params->collection;
     GtkWidget* file_explorer = params->file_explorer;
 
     //cleans the files everytime a new one is dropped
-    g_hash_table_remove_all(collection);
+    if(collection) g_hash_table_remove_all(collection);
 
-    if(!file_list){
+    if(!file){
         return;
     }
 
-    int index = 0;
-    gpointer file = NULL;
-
-    while ((file = g_list_model_get_item(file_list, index)) != NULL){
-        add_file_to_collection(G_FILE(file), collection);
-        index++;
-    }
+    add_file_to_collection(file, collection);
 
     if (error) {
         g_error_free(error);
@@ -251,19 +245,46 @@ static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer u
     build_file_hierarchy_widget(collection, file_explorer);
 }
 
-void open_file_dialog(GtkButton* button, gpointer user_data) {
+static void on_output_dir_selected(GObject* source, GAsyncResult* result, gpointer user_data) {
+    GtkFileDialog* dialog = GTK_FILE_DIALOG(source);
+    GError* error = NULL;
+    GFile* file = gtk_file_dialog_save_finish(dialog, result, &error);
+    if (error) {
+        g_error_free(error);
+        return;
+    }
+    if(!file){
+        return;
+    }
+
+    BROWSE_FOR_OUTPUT_DIR_PARAMETERS* params = user_data;
+
+    GtkEntry* output_entry = params->output_entry;
+    GtkEntryBuffer* buffer = gtk_entry_get_buffer(output_entry);
+    char* folder_name = g_file_get_path(file);
+    gtk_entry_buffer_set_text(buffer, folder_name, strlen(folder_name));
+}
+
+void browse_for_dir(GtkButton* button, gpointer user_data) {
 
     (void) button;
 
-    OPEN_FILE_DIALOG_PARAMETERS* parameters = (OPEN_FILE_DIALOG_PARAMETERS*) user_data;
-    if (!GTK_IS_FILE_DIALOG(parameters->dialog)) {
-        g_print("not a file dialog\n");
-        return;
-    }
-    gtk_file_dialog_select_multiple_folders(parameters->dialog,
+    BROWSE_FOR_DIR_PARAMETERS* parameters = (BROWSE_FOR_DIR_PARAMETERS*) user_data;
+    gtk_file_dialog_select_folder(parameters->dialog,
                          parameters->window,
                          NULL,                
                          on_file_open_ready,
                          parameters);         
+}
+
+void browse_for_output_dir(GtkButton* button, gpointer user_data){
+    (void) button;
+
+    BROWSE_FOR_OUTPUT_DIR_PARAMETERS* parameters = (BROWSE_FOR_OUTPUT_DIR_PARAMETERS*) user_data;
+    gtk_file_dialog_save(parameters->dialog,
+                         parameters->window,
+                         NULL,                
+                         on_output_dir_selected,
+                         parameters);   
 }
 
