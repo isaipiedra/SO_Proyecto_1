@@ -2,18 +2,6 @@
 #include "outputNameEntry.h"
 #include "utils.h"
 
-static void show_warning_dialog(GtkWindow *parent) {
-    GtkAlertDialog *dialog = gtk_alert_dialog_new("¡Warning!");
-    
-    gtk_alert_dialog_set_detail(dialog, "The saving path is not valid, resorting to default path");
-    
-    const char *buttons[] = {"Ok", NULL};
-    gtk_alert_dialog_set_buttons(dialog, buttons);
-    gtk_alert_dialog_set_cancel_button(dialog, 0); 
-    
-    gtk_alert_dialog_choose(dialog, parent, NULL, on_show_alert, NULL);
-}
-
 void on_update_output_entry(GtkEditable* editable, gpointer user_data){
     GtkLabel** lbl_ptr = (GtkLabel**) user_data;
     GtkLabel* folder_name = *lbl_ptr;
@@ -41,7 +29,7 @@ void on_output_entry_focus_leave(GtkEventControllerFocus* self, gpointer user_da
     const char* text = gtk_entry_buffer_get_text(buffer);
 
     if(!is_valid_file_path(text)){
-        show_warning_dialog(window);
+        show_warning_dialog(window, "The saving path is not valid, resorting to default path");
         gtk_label_set_text(GTK_LABEL(folder_name), OUTPUT_FOLDER_DEFAULT_NAME);
         gtk_entry_buffer_set_text(buffer, OUTPUT_FOLDER_DEFAULT_NAME, strlen(OUTPUT_FOLDER_DEFAULT_NAME));
     }

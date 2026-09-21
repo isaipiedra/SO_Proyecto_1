@@ -34,172 +34,175 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="layout_compress_mode">
-            <property name="orientation">vertical</property>
+          <object class="GtkScrolledWindow">
             <child>
-              <object class="GtkBox">
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
+              <object class="GtkBox" id="layout_compress_mode">
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFrame" id="box_dnd_container">
-                    <property name="label-xalign">0</property>
-                    <property name="name">box_dnd_container</property>
+                  <object class="GtkBox">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkBox" id="box_container01">
-                        <property name="halign">center</property>
+                      <object class="GtkBox" id="box_dnd_container">
+                        <property name="hexpand">True</property>
                         <property name="name">box_container01</property>
                         <property name="orientation">vertical</property>
-                        <property name="valign">center</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="file">images/download.png</property>
-                            <property name="height-request">128</property>
-                            <property name="margin-bottom">10</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="lbl_initial_msg">
-                            <property name="label" translatable="yes">Drag and drop your directory</property>
-                            <property name="name">lbl_initial_msg</property>
-                            <style>
-                              <class name="lbl_initial_msg"/>
-                            </style>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="valign">center</property>
-                            <child>
-                              <object class="GtkSeparator" id="separator_2">
-                                <property name="hexpand">True</property>
-                                <property name="opacity">0.5</property>
-                                <property name="valign">center</property>
-                                <style>
-                                  <class name="separator"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="lbl_or">
-                                <property name="label" translatable="yes">OR</property>
-                                <property name="name">lbl_or</property>
-                                <style>
-                                  <class name="lbl_or"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSeparator" id="separator_1">
-                                <property name="hexpand">True</property>
-                                <property name="opacity">0.5</property>
-                                <property name="valign">center</property>
-                                <style>
-                                  <class name="separator"/>
-                                </style>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="btn_open_file_explorer">
-                            <property name="label" translatable="yes">Browse for Directory</property>
-                            <property name="name">btn_open_file_explorer</property>
-                            <style>
-                              <class name="btn_open_file_explorer"/>
-                            </style>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="box_container01"/>
-                        </style>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="box_dnd_container"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox" id="box_file_explorer_container">
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkScrolledWindow" id="scroll_file_explorer">
-                        <property name="min-content-width">300</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkBox" id="box_file_explorer">
-                            <property name="hexpand">True</property>
+                          <object class="GtkBox" id="dnd_content">
+                            <property name="halign">center</property>
                             <property name="orientation">vertical</property>
-                            <style>
-                              <class name="box_file_explorer"/>
-                            </style>
+                            <property name="valign">center</property>
+                            <property name="vexpand">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="file">images/download.png</property>
+                                <property name="height-request">128</property>
+                                <property name="margin-bottom">10</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="lbl_initial_msg">
+                                <property name="label" translatable="yes">Drag and drop your directory</property>
+                                <property name="name">lbl_initial_msg</property>
+                                <style>
+                                  <class name="lbl_initial_msg"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="valign">center</property>
+                                <child>
+                                  <object class="GtkSeparator" id="separator_2">
+                                    <property name="hexpand">True</property>
+                                    <property name="opacity">0.5</property>
+                                    <property name="valign">center</property>
+                                    <style>
+                                      <class name="separator"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="lbl_or">
+                                    <property name="label" translatable="yes">OR</property>
+                                    <property name="name">lbl_or</property>
+                                    <style>
+                                      <class name="lbl_or"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator" id="separator_1">
+                                    <property name="hexpand">True</property>
+                                    <property name="opacity">0.5</property>
+                                    <property name="valign">center</property>
+                                    <style>
+                                      <class name="separator"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="btn_open_file_explorer">
+                                <property name="label" translatable="yes">Browse for Directory</property>
+                                <property name="name">btn_open_file_explorer</property>
+                                <style>
+                                  <class name="btn_open_file_explorer"/>
+                                </style>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <style>
-                          <class name="scroll_file_explorer"/>
+                          <class name="box_dnd_container"/>
                         </style>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox" id="box_output_name">
-                        <property name="valign">end</property>
+                      <object class="GtkBox" id="box_file_explorer_container">
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkButton" id="btn_output_browse_dir">
+                          <object class="GtkScrolledWindow" id="scroll_file_explorer">
+                            <property name="min-content-width">300</property>
+                            <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkImage">
-                                <property name="file">images/folder.png</property>
+                              <object class="GtkBox" id="box_file_explorer">
+                                <property name="hexpand">True</property>
+                                <property name="orientation">vertical</property>
+                                <style>
+                                  <class name="box_file_explorer"/>
+                                </style>
                               </object>
                             </child>
                             <style>
-                              <class name="btn_output_browse_dir"/>
+                              <class name="scroll_file_explorer"/>
                             </style>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry_output_name">
-                            <property name="hexpand">True</property>
-                            <property name="placeholder-text">output</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="label">.jix</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="box_output_name"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="btn_compile">
-                        <property name="halign">end</property>
-                        <child>
-                          <object class="GtkBox" id="box_compile">
-                            <property name="spacing">10</property>
+                          <object class="GtkBox" id="box_output_name">
+                            <property name="valign">end</property>
+                            <child>
+                              <object class="GtkButton" id="btn_output_browse_dir">
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="file">images/folder.png</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="btn_output_browse_dir"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="entry_output_name">
+                                <property name="hexpand">True</property>
+                                <property name="placeholder-text">output</property>
+                              </object>
+                            </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="label">Compress</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="file">images/right-arrow.png</property>
+                                <property name="label">.jix</property>
                               </object>
                             </child>
                             <style>
-                              <class name="box_compile"/>
+                              <class name="box_output_name"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="btn_compile">
+                            <property name="halign">end</property>
+                            <child>
+                              <object class="GtkBox" id="box_compile">
+                                <property name="spacing">10</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">Compress</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="file">images/right-arrow.png</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="box_compile"/>
+                                </style>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="btn_compile"/>
                             </style>
                           </object>
                         </child>
                         <style>
-                          <class name="btn_compile"/>
+                          <class name="box_file_explorer_container"/>
                         </style>
                       </object>
                     </child>
-                    <style>
-                      <class name="box_file_explorer_container"/>
-                    </style>
                   </object>
                 </child>
               </object>
@@ -207,42 +210,190 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="layout_decompress_mode">
-            <property name="orientation">vertical</property>
+          <object class="GtkScrolledWindow">
             <property name="visible">False</property>
             <child>
-              <object class="GtkButton" id="btn_open_file_explorer_4">
-                <property name="label" translatable="yes">Browse for Directory</property>
-                <property name="name">btn_open_file_explorer</property>
-                <style>
-                  <class name="btn_open_file_explorer"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox" id="box_output_name_4">
-                <property name="valign">end</property>
+              <object class="GtkBox" id="layout_decompress_mode">
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkButton" id="btn_output_browse_dir_4">
+                  <object class="GtkBox">
+                    <property name="hexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkImage">
-                        <property name="file">images/folder.png</property>
+                      <object class="GtkBox" id="box_dnd_container_decomp">
+                        <child>
+                          <object class="GtkBox" id="dnd_content_decomp">
+                            <property name="halign">center</property>
+                            <property name="orientation">vertical</property>
+                            <property name="valign">center</property>
+                            <property name="vexpand">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="file">images/download.png</property>
+                                <property name="height-request">128</property>
+                                <property name="margin-bottom">10</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">Drag and drop your jix file</property>
+                                <style>
+                                  <class name="lbl_initial_msg"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <child>
+                                  <object class="GtkSeparator">
+                                    <property name="hexpand">True</property>
+                                    <property name="opacity">0.5</property>
+                                    <property name="valign">center</property>
+                                    <style>
+                                      <class name="separator"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label">OR</property>
+                                    <style>
+                                      <class name="lbl_or"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkSeparator">
+                                    <property name="hexpand">True</property>
+                                    <property name="opacity">0.5</property>
+                                    <property name="valign">center</property>
+                                    <style>
+                                      <class name="separator"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="btn_browse_jix_file">
+                                <property name="label" translatable="yes">Browse for File</property>
+                                <property name="name">btn_open_file_explorer</property>
+                                <style>
+                                  <class name="btn_open_file_explorer"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="box_dnd_container"/>
+                        </style>
                       </object>
                     </child>
-                    <style>
-                      <class name="btn_output_browse_dir"/>
-                    </style>
+                    <child>
+                      <object class="GtkBox" id="bottom_section_decomp">
+                        <property name="orientation">vertical</property>
+                        <property name="visible">False</property>
+                        <child>
+                          <object class="GtkBox" id="box_selected_file">
+                            <property name="halign">center</property>
+                            <child>
+                              <object class="GtkBox" id="comp_selected_file">
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="vexpand">True</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="file">images/box.png</property>
+                                    <property name="height-request">32</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="vexpand">True</property>
+                                    <property name="width-request">32</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="lbl_selected_decomp_file">
+                                    <property name="label">Name of the File.jix</property>
+                                    <style>
+                                      <class name="lbl_selected_decomp_file"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="comp_selected_file"/>
+                                </style>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="box_selected_file"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="box_export_section">
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkBox" id="box_output_name_decomp">
+                                <property name="valign">end</property>
+                                <child>
+                                  <object class="GtkButton" id="btn_output_browse_dir_decomp">
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="file">images/folder.png</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="btn_output_browse_dir"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="entry_output_name_decomp">
+                                    <property name="hexpand">True</property>
+                                    <property name="placeholder-text">output</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="box_output_name"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="btn_decompress">
+                                <property name="halign">end</property>
+                                <child>
+                                  <object class="GtkBox" id="box_compile_decompress">
+                                    <property name="spacing">10</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="label">Decompress</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="file">images/right-arrow.png</property>
+                                      </object>
+                                    </child>
+                                    <style>
+                                      <class name="box_compile"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="btn_compile"/>
+                                </style>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="box_export_section"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkEntry" id="entry_output_name_4">
-                    <property name="hexpand">True</property>
-                    <property name="placeholder-text">output</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="box_output_name"/>
-                </style>
               </object>
             </child>
           </object>

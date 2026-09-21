@@ -8,7 +8,7 @@ void free_callback_data(gpointer data, GClosure *closure) {
     g_free(data);
 }
 
-void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data) {
+static void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data) {
     GtkAlertDialog *alert = GTK_ALERT_DIALOG(source_object);
     GError *error = NULL;
     (void) user_data;
@@ -18,6 +18,18 @@ void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data
     if (error) {
         g_error_free(error);
     }
+}
+
+void show_warning_dialog(GtkWindow *parent, char* message){
+    GtkAlertDialog *dialog = gtk_alert_dialog_new("¡Careful!");
+    
+    gtk_alert_dialog_set_detail(dialog, message);
+    
+    const char *buttons[] = {"Ok", NULL};
+    gtk_alert_dialog_set_buttons(dialog, buttons);
+    gtk_alert_dialog_set_cancel_button(dialog, 0); 
+    
+    gtk_alert_dialog_choose(dialog, parent, NULL, on_show_alert, NULL);
 }
 
 void clear_box(GtkBox *box) {
@@ -129,4 +141,13 @@ bool is_directory(const char* path){
     if(stat(path,&s) == 0)
         if( s.st_mode & S_IFDIR ) return true;
     return false;
+}
+
+bool has_extension(const char* path, const char* extension){
+
+    char* point;
+    if((point = strrchr(path,'.')) != NULL )
+        return (strcmp(point, extension) == 0);
+    return false;
+
 }

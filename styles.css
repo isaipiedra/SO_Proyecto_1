@@ -13,7 +13,10 @@
 .box_file_explorer,
 .box_output_name,
 .btn_decompress_mode,
-.btn_compress_mode
+.btn_compress_mode,
+.box_export_section,
+.box_selected_file,
+.lbl_selected_decomp_file
 {
     background-image: none;
     background-color: transparent;
@@ -135,7 +138,7 @@
     margin-left: 0px;
 }
 
-.box_file_explorer_container{
+.box_file_explorer_container, .box_export_section{
     background-color: rgb(213, 231, 253);
     margin-top: 100px;
     margin-bottom: 100px;
@@ -144,7 +147,17 @@
     padding: 20px;
 }
 
+.box_export_section, .box_selected_file{
+    margin: 100px;
+    margin-top: 0;
+}
 .box_output_name{
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.lbl_selected_decomp_file{
+    font-size: 25px;
+    font-weight: 500;
+    margin-left: 5px;
 }

@@ -14,8 +14,12 @@ GtkBuilder *builder;
 static GHashTable* file_collection = NULL;
 GObject* window = NULL;
 static GtkFileDialog* file_dialog = NULL;
+static GtkFileDialog* jix_file_dialog = NULL;
+
 
 extern GtkLabel* lbl_output_folder_name;
+
+GFile* decompress_selected_file = NULL;
 
 typedef struct{
     GtkWidget* layout_holder;
@@ -39,8 +43,6 @@ static void on_toggle_mode_button_clicked(GtkWidget* button, gpointer user_data)
         }
         i++;
     }
-        printf("\n");
-
 }
 static void set_up_widgets(GtkBuilder* builder){
 
@@ -96,9 +98,9 @@ static void set_up_widgets(GtkBuilder* builder){
 
     file_collection = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     GtkWidget *dnd_box = GTK_WIDGET(gtk_builder_get_object(builder, "box_dnd_container"));
-    set_drop_in_box(dnd_box, file_collection, GTK_WIDGET(box_file_explorer_container), GTK_WINDOW(window));
+    set_drop_to_compress_in_box(dnd_box, file_collection, GTK_WIDGET(box_file_explorer_container), GTK_WINDOW(window));
 
-    // ------------- browse button -------------
+    // ------------- browse dir button -------------
     
     file_dialog = gtk_file_dialog_new();
     char* result_file = NULL;
@@ -168,7 +170,45 @@ static void set_up_widgets(GtkBuilder* builder){
     );
 
     gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir), pointer_cursor);
+
+    //======================= Decompresser =======================
+    // ------------- drag and drop -------------
+
+    file_collection = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    GObject *dnd_box_decompress = gtk_builder_get_object(builder, "box_dnd_container_decomp");
+    GObject* bottom_section = gtk_builder_get_object(builder, "bottom_section_decomp");
+    GObject* lbl_selected_file_name = gtk_builder_get_object(builder, "lbl_selected_decomp_file");
+    GObject* entry_decomp_output_path = gtk_builder_get_object(builder, "entry_output_name_decomp");
+    set_drop_to_decompress_in_box(
+        GTK_WIDGET(dnd_box_decompress), 
+        GTK_WIDGET(bottom_section), 
+        GTK_WINDOW(window),
+        GTK_LABEL(lbl_selected_file_name),
+        &decompress_selected_file,
+        GTK_ENTRY(entry_decomp_output_path)
+    );
+
+    // ------------- browse jix file button -------------
     
+    jix_file_dialog = gtk_file_dialog_new();
+    GObject* btn_browse_jix_file = gtk_builder_get_object(builder, "btn_browse_jix_file");
+    BROWSE_FOR_JIX_FILE_PARAMETERS* open_jix_file_dialog_parameters = g_new0(BROWSE_FOR_JIX_FILE_PARAMETERS, 1); 
+    
+    open_jix_file_dialog_parameters->window = GTK_WINDOW(window);
+    open_jix_file_dialog_parameters->dialog = jix_file_dialog;
+    open_jix_file_dialog_parameters->display_widget = GTK_WIDGET(bottom_section);
+    open_jix_file_dialog_parameters->result_file = &decompress_selected_file;
+    open_jix_file_dialog_parameters->lbl_selected_file_name = GTK_LABEL(lbl_selected_file_name);
+    open_jix_file_dialog_parameters->entry_output_path = GTK_ENTRY(entry_decomp_output_path);
+
+    g_signal_connect_data(
+        btn_browse_jix_file, "clicked", 
+        G_CALLBACK(browse_for_JIX_file), 
+        open_jix_file_dialog_parameters, 
+        free_callback_data, 0
+    );
+
+    gtk_widget_set_cursor(GTK_WIDGET(btn_browse_jix_file), pointer_cursor);
 
 }
 
