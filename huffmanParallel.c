@@ -8,16 +8,12 @@
 #include "huffmanCore.h"
 #include "huffmanParallel.h"
 
-// COMPRESIÓN PARALELA
-
-// Un "worker" es un hijo fork con su pipe de salida.
 typedef struct {
     pid_t pid;
     int read_fd;
 } CompressWorker;
 
-CompressionStats huffman_compression_parallel(const char *directory_path,
-                                              const char *output_filename) {
+CompressionStats huffman_compression_parallel(const char *directory_path, const char *output_directory, const char *output_filename) {
     CompressionStats stats = {0, 0, 0, 0};
 
     DirectoryContent *content = load_directory(directory_path);
@@ -29,9 +25,16 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
 
     stats.files_total = content->file_count;
 
-    FILE *output_file = fopen(output_filename, "wb");
+    char output_path[MAX_PATH];
+    if (!build_output_path(output_path, sizeof(output_path), output_directory, output_filename)) {
+        fprintf(stderr, "Error: output path too long\n");
+        free_directory_content(content);
+        return stats;
+    }
+
+    FILE *output_file = fopen(output_path, "wb");
     if (!output_file) {
-        fprintf(stderr, "Error: Cannot create output file %s\n", output_filename);
+        fprintf(stderr, "Error: Cannot create output file %s\n", output_path);
         free_directory_content(content);
         return stats;
     }
@@ -42,7 +45,6 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
 
     CompressWorker *workers = calloc(content->file_count, sizeof(CompressWorker));
 
-    // Lanzar un hijo por archivo
     for (int i = 0; i < content->file_count; i++) {
         int p[2];
         if (pipe(p) != 0) {
@@ -63,7 +65,6 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
         }
 
         if (pid == 0) {
-            // HIJO
             close(p[0]);
 
             CompressedFile *cf = compress_file_to_block(&content->files[i]);
@@ -80,17 +81,14 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
                 close(p[1]);
             }
 
-            // No llamar a exit(): usar _exit para no flushear buffers heredados
             _exit(0);
         }
 
-        // PADRE
         close(p[1]);
         workers[i].pid = pid;
         workers[i].read_fd = p[0];
     }
 
-    // Leer los bloques en orden y escribirlos al .jix
     for (int i = 0; i < content->file_count; i++) {
         if (workers[i].pid < 0) {
             stats.files_total--;
@@ -108,7 +106,6 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
         CompressedFile *cf = NULL;
         if (read_compressed_file(pipe_in, &cf)) {
             write_compressed_file(output_file, cf);
-            if (cf->verified) stats.files_verified++;
             stats.total_original_bytes += cf->original_size;
             stats.total_compressed_bytes += cf->compressed_size;
             free_compressed_file(cf);
@@ -117,7 +114,7 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
             stats.files_total--;
         }
 
-        fclose(pipe_in);            // cierra también workers[i].read_fd
+        fclose(pipe_in);
         waitpid(workers[i].pid, NULL, 0);
     }
 
@@ -127,15 +124,12 @@ CompressionStats huffman_compression_parallel(const char *directory_path,
     return stats;
 }
 
-// DESCOMPRESIÓN PARALELA
-
 typedef struct {
     pid_t pid;
     int write_fd;
 } DecompressWorker;
 
-DecompressionStats huffman_decompression_parallel(const char *jix_filename,
-                                                  const char *output_directory) {
+DecompressionStats huffman_decompression_parallel(const char *jix_filename, const char *output_directory) {
     DecompressionStats stats = {0, 0, 0, 0, 0};
 
     FILE *input_file = fopen(jix_filename, "rb");
@@ -160,7 +154,6 @@ DecompressionStats huffman_decompression_parallel(const char *jix_filename,
     }
     stats.files_total = file_count;
 
-    // Leer todos los bloques a memoria (secuencial, pero rápido)
     CompressedFile **blocks = calloc(file_count, sizeof(CompressedFile *));
     int blocks_read = 0;
     for (int i = 0; i < file_count; i++) {
@@ -174,7 +167,6 @@ DecompressionStats huffman_decompression_parallel(const char *jix_filename,
 
     DecompressWorker *workers = calloc(blocks_read, sizeof(DecompressWorker));
 
-    // Lanzar un hijo por bloque
     for (int i = 0; i < blocks_read; i++) {
         int p[2];
         if (pipe(p) != 0) {
@@ -195,7 +187,6 @@ DecompressionStats huffman_decompression_parallel(const char *jix_filename,
         }
 
         if (pid == 0) {
-            // HIJO: lee el bloque del pipe, descomprime y escribe el archivo
             close(p[1]);
 
             FILE *pipe_in = fdopen(p[0], "rb");
@@ -236,13 +227,11 @@ DecompressionStats huffman_decompression_parallel(const char *jix_filename,
             _exit(ok ? 0 : 3);
         }
 
-        // PADRE
         close(p[0]);
         workers[i].pid = pid;
         workers[i].write_fd = p[1];
     }
 
-    // Alimentar a los hijos con sus bloques
     for (int i = 0; i < blocks_read; i++) {
         if (workers[i].pid < 0) {
             stats.files_failed++;
@@ -252,13 +241,12 @@ DecompressionStats huffman_decompression_parallel(const char *jix_filename,
         FILE *pipe_out = fdopen(workers[i].write_fd, "wb");
         if (pipe_out) {
             write_compressed_file(pipe_out, blocks[i]);
-            fclose(pipe_out);   // cierra workers[i].write_fd
+            fclose(pipe_out);
         } else {
             close(workers[i].write_fd);
         }
     }
 
-    // Recolectar resultados
     for (int i = 0; i < blocks_read; i++) {
         if (workers[i].pid < 0) continue;
 

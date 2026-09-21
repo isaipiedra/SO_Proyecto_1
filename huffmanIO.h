@@ -8,8 +8,9 @@
 #include "types.h"
 
 DirectoryContent* load_directory(const char *directory_path);
-
 void free_directory_content(DirectoryContent *content);
+
+int build_output_path(char *out, size_t out_size, const char *output_directory, const char *filename);
 
 CompressedFile* compress_file_to_block(const FileData *file);
 void free_compressed_file(CompressedFile *cf);

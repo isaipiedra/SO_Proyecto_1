@@ -2,7 +2,7 @@
 CC = gcc
 
 # Source files
-SRC = main.c dragAndDrop.c fileExplorer.c utils.c outputNameEntry.c huffmanSerial.c huffmanParallel.c huffmanCore.c huffmanIO.c
+SRC = main.c dragAndDrop.c fileExplorer.c utils.c outputNameEntry.c huffmanSerial.c huffmanParallel.c huffmanConcurrent.c huffmanCore.c huffmanIO.c
 
 # Output executable
 TARGET = proyecto_1
@@ -16,7 +16,7 @@ OPENSSL_FLAGS = $(shell pkg-config --cflags libcrypto)
 OPENSSL_LIBS = $(shell pkg-config --libs libcrypto)
 
 # Compiler flags
-CFLAGS = $(GTK_FLAGS) -Wall -Wextra -pedantic -z noexecstack
+CFLAGS = $(GTK_FLAGS) -Wall -Wextra -pedantic -z noexecstack -pthread
 LDFLAGS = -Wl,-rpath=/usr/lib/x86_64-linux-gnu -Wl,-rpath=/lib/x86_64-linux-gnu
 
 # Default target

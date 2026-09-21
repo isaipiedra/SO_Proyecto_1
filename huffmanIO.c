@@ -64,6 +64,18 @@ void free_directory_content(DirectoryContent *content) {
     free(content);
 }
 
+int build_output_path(char *out, size_t out_size, const char *output_directory, const char *filename) {
+    if (!out || out_size == 0 || !filename) return 0;
+
+    int n;
+    if (output_directory && output_directory[0] != '\0') {
+        n = snprintf(out, out_size, "%s/%s", output_directory, filename);
+    } else {
+        n = snprintf(out, out_size, "%s", filename);
+    }
+    return (n > 0 && (size_t)n < out_size) ? 1 : 0;
+}
+
 CompressedFile* compress_file_to_block(const FileData *file) {
     if (!file) return NULL;
 
@@ -110,12 +122,6 @@ CompressedFile* compress_file_to_block(const FileData *file) {
     cf->tree_size = tree_offset;
 
     unsigned char *decompressed = NULL;
-    unsigned long decompressed_size = decompress_data(
-        compressed_data, compressed_size, &decompressed,
-        tree, bit_count, file->size);
-
-    cf->verified = (decompressed_size == file->size) &&
-                   verify_md5(decompressed, decompressed_size, cf->md5);
 
     free(decompressed);
     free_huffman_tree(tree);
@@ -181,7 +187,7 @@ int read_compressed_file(FILE *in, CompressedFile **out) {
     *out = cf;
     return 1;
 
-fail:
-    free_compressed_file(cf);
-    return 0;
+    fail:
+        free_compressed_file(cf);
+        return 0;
 }

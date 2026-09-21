@@ -90,7 +90,6 @@ typedef struct {
     unsigned long tree_size;
     unsigned char *compressed_data;
     unsigned long bit_count;
-    int verified;
 } CompressedFile;
 
 #endif

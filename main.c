@@ -7,6 +7,7 @@
 #include "types.h"
 #include "huffmanSerial.h"
 #include "huffmanParallel.h"
+#include "huffmanConcurrent.h"
 
 GtkBuilder *builder;
 
@@ -138,7 +139,9 @@ static void activate(GtkApplication *app) {
 
 }
 
-// MEDICIÓN DE TIEMPO
+/*
+// DEBUG MAIN BLOCK
+// TIME MEASUREMENT
 
 static double now_seconds(void) {
     struct timespec ts;
@@ -146,7 +149,7 @@ static double now_seconds(void) {
     return ts.tv_sec + ts.tv_nsec / 1e9;
 }
 
-// IMPRESIÓN DE ESTADÍSTICAS
+// STATISTICS
 
 static void print_compression_stats(const CompressionStats *s, const char *label,
                                     const char *archive, double elapsed) {
@@ -162,8 +165,6 @@ static void print_compression_stats(const CompressionStats *s, const char *label
     printf("  Archive:                     %s\n", archive);
     printf("  Elapsed time:                %.6f s\n", elapsed);
     printf("  Files processed:             %d\n", s->files_total);
-    printf("  Files verified (round-trip): %d / %d (%.2f%%)\n",
-           s->files_verified, s->files_total, health);
     printf("  Total original size:         %lu bytes\n", s->total_original_bytes);
     printf("  Total compressed size:       %lu bytes\n", s->total_compressed_bytes);
     printf("  Compression ratio:           %.4f\n", ratio);
@@ -188,21 +189,17 @@ static void print_decompression_stats(const DecompressionStats *s, const char *l
     printf("\n");
 }
 
-// HELPERS DE NOMBRES
+// NAME HELPERS
 
-// Construye "<base>_<suffix>.jix" a partir de un nombre base (sin extensión).
-static void build_archive_name(char *out, size_t out_size,
-                               const char *base, const char *suffix) {
+static void build_archive_name(char *out, size_t out_size, const char *base, const char *suffix) {
     snprintf(out, out_size, "%s_%s.jix", base, suffix);
 }
 
-// Construye "<base>_<suffix>" (sin extensión) para directorios de salida.
-static void build_dir_name(char *out, size_t out_size,
-                           const char *base, const char *suffix) {
+static void build_dir_name(char *out, size_t out_size, const char *base, const char *suffix) {
     snprintf(out, out_size, "%s_%s", base, suffix);
 }
 
-// MAIN DE COMPARACIÓN
+// MAIN FOR DEBUG COMPARISON
 
 int main_debug(int argc, char *argv[]) {
     if (argc < 3) {
@@ -220,39 +217,53 @@ int main_debug(int argc, char *argv[]) {
     char parallel_archive[MAX_PATH];
     char serial_outdir[MAX_PATH];
     char parallel_outdir[MAX_PATH];
+    char concurrent_archive[MAX_PATH];
+    char concurrent_outdir[MAX_PATH];
 
     build_archive_name(serial_archive, sizeof(serial_archive), base, "serial");
-    build_archive_name(parallel_archive, sizeof(parallel_archive), base, "paralela");
+    build_archive_name(parallel_archive, sizeof(parallel_archive), base, "parallel");
     build_dir_name(serial_outdir, sizeof(serial_outdir), base, "serial_out");
-    build_dir_name(parallel_outdir, sizeof(parallel_outdir), base, "paralela_out");
+    build_dir_name(parallel_outdir, sizeof(parallel_outdir), base, "parallel_out");
+    build_archive_name(concurrent_archive, sizeof(concurrent_archive), base, "concurrent");
+    build_dir_name(concurrent_outdir, sizeof(concurrent_outdir), base, "concurrent_out");
 
     printf("=====================================================\n");
-    printf("  HUFFMAN BENCHMARK: SERIAL vs PARALLEL\n");
+    printf("  HUFFMAN BENCHMARK: SERIAL vs PARALLEL vs CONCURRENT\n");
     printf("=====================================================\n");
     printf("Input directory:   %s\n", input_dir);
     printf("Serial archive:    %s\n", serial_archive);
     printf("Parallel archive:  %s\n", parallel_archive);
+    printf("Concurrent archive: %s\n", concurrent_archive);
     printf("=====================================================\n\n");
 
-    // ---------- COMPRESIÓN SERIAL ----------
+    // ---------- SERIAL COMPRESSION ----------
 
     printf(">>> Running SERIAL compression...\n\n");
     double t0 = now_seconds();
-    CompressionStats cs = huffman_compression_serial(input_dir, serial_archive);
+    CompressionStats cs = huffman_compression_serial(input_dir, NULL, serial_archive);
     double t1 = now_seconds();
     double serial_comp_time = t1 - t0;
     print_compression_stats(&cs, "COMPRESSION (SERIAL)", serial_archive, serial_comp_time);
 
-    // ---------- COMPRESIÓN PARALELA ----------
+    // ---------- PARALLEL COMPRESSION ----------
 
     printf(">>> Running PARALLEL compression...\n\n");
     t0 = now_seconds();
-    CompressionStats cp = huffman_compression_parallel(input_dir, parallel_archive);
+    CompressionStats cp = huffman_compression_parallel(input_dir, NULL, parallel_archive);
     t1 = now_seconds();
     double parallel_comp_time = t1 - t0;
     print_compression_stats(&cp, "COMPRESSION (PARALLEL)", parallel_archive, parallel_comp_time);
 
-    // ---------- DESCOMPRESIÓN SERIAL ----------
+    // ---------- CONCURRENT COMPRESSION ----------
+
+    printf(">>> Running CONCURRENT compression...\n\n");
+    t0 = now_seconds();
+    CompressionStats cc = huffman_compression_concurrent(input_dir, NULL, concurrent_archive);
+    t1 = now_seconds();
+    double concurrent_comp_time = t1 - t0;
+    print_compression_stats(&cc, "COMPRESSION (CONCURRENT)", concurrent_archive, concurrent_comp_time);
+
+    // ---------- SERIAL DECOMPRESSION ----------
 
     printf(">>> Running SERIAL decompression...\n\n");
     t0 = now_seconds();
@@ -261,7 +272,7 @@ int main_debug(int argc, char *argv[]) {
     double serial_decomp_time = t1 - t0;
     print_decompression_stats(&ds, "DECOMPRESSION (SERIAL)", serial_archive, serial_decomp_time);
 
-    // ---------- DESCOMPRESIÓN PARALELA ----------
+    // ---------- PARALLEL DECOMPRESSION ----------
 
     printf(">>> Running PARALLEL decompression...\n\n");
     t0 = now_seconds();
@@ -270,59 +281,66 @@ int main_debug(int argc, char *argv[]) {
     double parallel_decomp_time = t1 - t0;
     print_decompression_stats(&dp, "DECOMPRESSION (PARALLEL)", parallel_archive, parallel_decomp_time);
 
-    // ---------- RESUMEN ----------
+    
+    // ---------- CONCURRENT DECOMPRESSION ----------
+
+    printf(">>> Running CONCURRENT decompression...\n\n");
+    t0 = now_seconds();
+    DecompressionStats dc = huffman_decompression_concurrent(concurrent_archive, concurrent_outdir);
+    t1 = now_seconds();
+    double concurrent_decomp_time = t1 - t0;
+    print_decompression_stats(&dc, "DECOMPRESSION (CONCURRENT)", concurrent_archive, concurrent_decomp_time);
+
+    // ---------- SUMMARY ----------
 
     printf("=====================================================\n");
     printf("  SUMMARY\n");
     printf("=====================================================\n");
-    printf("Compression times:\n");
-    printf("  Serial:   %.6f s\n", serial_comp_time);
-    printf("  Parallel: %.6f s\n", parallel_comp_time);
-    if (parallel_comp_time > 0.0) {
-        printf("  Speedup:  %.2fx\n", serial_comp_time / parallel_comp_time);
-    }
+        printf("Compression times:\n");
+    printf("  Serial:     %.6f s\n", serial_comp_time);
+    printf("  Parallel:   %.6f s\n", parallel_comp_time);
+    printf("  Concurrent: %.6f s\n", concurrent_comp_time);
+    if (parallel_comp_time > 0.0)
+        printf("  Speedup parallel:   %.2fx\n", serial_comp_time / parallel_comp_time);
+    if (concurrent_comp_time > 0.0)
+        printf("  Speedup concurrent: %.2fx\n", serial_comp_time / concurrent_comp_time);
     printf("\n");
 
     printf("Decompression times:\n");
-    printf("  Serial:   %.6f s\n", serial_decomp_time);
-    printf("  Parallel: %.6f s\n", parallel_decomp_time);
-    if (parallel_decomp_time > 0.0) {
-        printf("  Speedup:  %.2fx\n", serial_decomp_time / parallel_decomp_time);
-    }
+    printf("  Serial:     %.6f s\n", serial_decomp_time);
+    printf("  Parallel:   %.6f s\n", parallel_decomp_time);
+    printf("  Concurrent: %.6f s\n", concurrent_decomp_time);
+    if (parallel_decomp_time > 0.0)
+        printf("  Speedup parallel:   %.2fx\n", serial_decomp_time / parallel_decomp_time);
+    if (concurrent_decomp_time > 0.0)
+        printf("  Speedup concurrent: %.2fx\n", serial_decomp_time / concurrent_decomp_time);
     printf("\n");
 
     printf("Health check:\n");
-    printf("  Serial compression:   %d / %d verified\n", cs.files_verified, cs.files_total);
-    printf("  Parallel compression: %d / %d verified\n", cp.files_verified, cp.files_total);
-    printf("  Serial decompression:   %d ok, %d failed\n", ds.files_successful, ds.files_failed);
-    printf("  Parallel decompression: %d ok, %d failed\n", dp.files_successful, dp.files_failed);
+    printf("  Serial decompression:     %d ok, %d failed\n", ds.files_successful, ds.files_failed);
+    printf("  Parallel decompression:   %d ok, %d failed\n", dp.files_successful, dp.files_failed);
+    printf("  Concurrent decompression: %d ok, %d failed\n", dc.files_successful, dc.files_failed);
     printf("\n");
 
-    printf("To verify archives are byte-identical, run:\n");
-    printf("  cmp %s %s && echo IDENTICAL\n", serial_archive, parallel_archive);
-    printf("\nTo verify restored files match the originals, run:\n");
-    printf("  diff -r %s %s && echo MATCH\n", input_dir, serial_outdir);
-    printf("  diff -r %s %s && echo MATCH\n", input_dir, parallel_outdir);
-    printf("=====================================================\n");
-
-    // Éxito global: ambos archivos verificados y ambas descompresiones exitosas
     int ok = (cs.files_verified == cs.files_total && cs.files_total > 0) &&
              (cp.files_verified == cp.files_total && cp.files_total > 0) &&
+             (cc.files_verified == cc.files_total && cc.files_total > 0) &&
              (ds.files_failed == 0 && ds.files_total > 0) &&
-             (dp.files_failed == 0 && dp.files_total > 0);
+             (dp.files_failed == 0 && dp.files_total > 0) &&
+             (dc.files_failed == 0 && dc.files_total > 0);
     return ok ? 0 : 1;
-}
+}*/
 
 
 int main(int argc, char *argv[]) {
 
-    main_debug(argc, argv);
+    /*main_debug(argc, argv);*/
 
-    /*GtkApplication *app = gtk_application_new("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+    GtkApplication *app = gtk_application_new("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
 
     int status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 
-    return status;*/
+    return status;
 }

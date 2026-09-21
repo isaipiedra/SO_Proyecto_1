@@ -6,8 +6,7 @@
 #include "huffmanCore.h"
 #include "huffmanSerial.h"
 
-CompressionStats huffman_compression_serial(const char *directory_path,
-                                            const char *output_filename) {
+CompressionStats huffman_compression_serial(const char *directory_path, const char *output_directory, const char *output_filename) {
     CompressionStats stats = {0, 0, 0, 0};
 
     DirectoryContent *content = load_directory(directory_path);
@@ -19,9 +18,16 @@ CompressionStats huffman_compression_serial(const char *directory_path,
 
     stats.files_total = content->file_count;
 
-    FILE *output_file = fopen(output_filename, "wb");
+    char output_path[MAX_PATH];
+    if (!build_output_path(output_path, sizeof(output_path), output_directory, output_filename)) {
+        fprintf(stderr, "Error: output path too long\n");
+        free_directory_content(content);
+        return stats;
+    }
+
+    FILE *output_file = fopen(output_path, "wb");
     if (!output_file) {
-        fprintf(stderr, "Error: Cannot create output file %s\n", output_filename);
+        fprintf(stderr, "Error: Cannot create output file %s\n", output_path);
         free_directory_content(content);
         return stats;
     }
@@ -39,7 +45,6 @@ CompressionStats huffman_compression_serial(const char *directory_path,
 
         write_compressed_file(output_file, cf);
 
-        if (cf->verified) stats.files_verified++;
         stats.total_original_bytes += cf->original_size;
         stats.total_compressed_bytes += cf->compressed_size;
 
@@ -51,8 +56,7 @@ CompressionStats huffman_compression_serial(const char *directory_path,
     return stats;
 }
 
-DecompressionStats huffman_decompression_serial(const char *jix_filename,
-                                                const char *output_directory) {
+DecompressionStats huffman_decompression_serial(const char *jix_filename, const char *output_directory) {
     DecompressionStats stats = {0, 0, 0, 0, 0};
 
     FILE *input_file = fopen(jix_filename, "rb");
