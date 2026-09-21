@@ -2,6 +2,7 @@
 #include "fileExplorer.h"
 #include "outputNameEntry.h"
 #include "utils.h"
+#include "huffmanAlgorithms.h"
 
 GtkBuilder *builder;
 
@@ -84,13 +85,49 @@ static void activate(GtkApplication *app) {
 
 }
 
+// DEBUG MAIN FUNCTION
+
+int main_debug(int argc, char *argv[]) {
+    if (argc < 4) {
+        fprintf(stderr, "Usage: %s -C <directory> <output.jix>\n", argv[0]);
+        fprintf(stderr, "       %s -D <archive.jix> <output_directory>\n\n", argv[0]);
+        return 1;
+    }
+
+    char mode = argv[1][1];
+
+    if (mode == 'C') {
+        if (argc != 4) {
+            fprintf(stderr, "Compression mode: -C <directory> <output.jix>\n");
+            return 1;
+        }
+        printf("=== HUFFMAN COMPRESSION ===\n\n");
+        int result = huffman_compression(argv[2], argv[3]);
+        return result ? 0 : 1;
+
+    } else if (mode == 'D') {
+        if (argc != 4) {
+            fprintf(stderr, "Decompression mode: -D <archive.jix> <output_directory>\n");
+            return 1;
+        }
+        printf("=== HUFFMAN DECOMPRESSION ===\n\n");
+        int result = huffman_decompression(argv[2], argv[3]);
+        return result ? 0 : 1;
+
+    } else {
+        fprintf(stderr, "Invalid mode. Use -C for compression or -D for decompression\n");
+        return 1;
+    }
+}
 
 int main(int argc, char *argv[]) {
-    GtkApplication *app = gtk_application_new("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+    return main_debug(argc, argv);
+
+    /*GtkApplication *app = gtk_application_new("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
     g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
 
     int status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
 
-    return status;
+    return status;*/
 }
