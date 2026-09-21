@@ -11,7 +11,9 @@
 .folder-arrow,
 .box_file_explorer_container,
 .box_file_explorer,
-.box_output_name
+.box_output_name,
+.btn_decompress_mode,
+.btn_compress_mode
 {
     background-image: none;
     background-color: transparent;
@@ -22,8 +24,13 @@
     margin: 0px;
 }
 
-.btn_open_file_explorer, .btn_compile{
-    background-image: none;
+.btn_open_file_explorer,
+.btn_compile,
+.btn_decompress_mode:checked,
+.btn_compress_mode:checked,
+.btn_decompress_mode,
+.btn_compress_mode
+{
     background-color: rgb(9, 76, 152);
     color: white;
     padding: 10px;
@@ -49,6 +56,22 @@
     padding-right: 20px;
     margin-right: 17px;
 }
+
+.btn_decompress_mode:checked,
+.btn_compress_mode:checked,
+.btn_decompress_mode,
+.btn_compress_mode
+{
+    border-radius: 0px;
+}
+
+.btn_decompress_mode,
+.btn_compress_mode
+{
+    background-color: transparent;
+    color: rgb(9, 76, 152);
+}
+
 .lbl_initial_msg{
   	font-weight: normal;
     font-size: 20px;

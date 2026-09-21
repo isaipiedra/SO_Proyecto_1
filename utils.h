@@ -5,6 +5,8 @@
 //wrapper fuction that matches the singnature
 void free_callback_data(gpointer data, GClosure *closure);
 
+void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data);
+
 void clear_box(GtkBox *box);
 
 void add_file_to_collection(GFile* file, GHashTable* collection);
@@ -12,3 +14,5 @@ void add_file_to_collection(GFile* file, GHashTable* collection);
 bool is_valid_file_name(const char* name);
 
 bool is_valid_file_path(const char* path);
+
+bool is_directory(const char* path);

@@ -2,16 +2,6 @@
 #include "outputNameEntry.h"
 #include "utils.h"
 
-static void on_wrong_name_alert(GObject *source_object, GAsyncResult *res, gpointer user_data) {
-    GtkAlertDialog *alert = GTK_ALERT_DIALOG(source_object);
-    GError *error = NULL;
-    
-    int button = gtk_alert_dialog_choose_finish(alert, res, &error);
-    if (error) {
-        g_error_free(error);
-    }
-}
-
 static void show_warning_dialog(GtkWindow *parent) {
     GtkAlertDialog *dialog = gtk_alert_dialog_new("¡Warning!");
     
@@ -21,7 +11,7 @@ static void show_warning_dialog(GtkWindow *parent) {
     gtk_alert_dialog_set_buttons(dialog, buttons);
     gtk_alert_dialog_set_cancel_button(dialog, 0); 
     
-    gtk_alert_dialog_choose(dialog, parent, NULL, on_wrong_name_alert, NULL);
+    gtk_alert_dialog_choose(dialog, parent, NULL, on_show_alert, NULL);
 }
 
 void on_update_output_entry(GtkEditable* editable, gpointer user_data){

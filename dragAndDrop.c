@@ -25,10 +25,36 @@ static GdkDragAction on_drag_leave(GtkDropTarget* target, double x, double y, gp
     return GDK_ACTION_COPY;
 }
 
+static void show_multiple_dirs_warning(GtkWindow *parent) {
+    GtkAlertDialog *dialog = gtk_alert_dialog_new("¡Careful!");
+    
+    gtk_alert_dialog_set_detail(dialog, "Make sure you are uploading a single directory.");
+    
+    const char *buttons[] = {"Ok", NULL};
+    gtk_alert_dialog_set_buttons(dialog, buttons);
+    gtk_alert_dialog_set_cancel_button(dialog, 0); 
+    
+    gtk_alert_dialog_choose(dialog, parent, NULL, on_show_alert, NULL);
+}
+
+
+static void show_only_dirs_warning(GtkWindow *parent) {
+    GtkAlertDialog *dialog = gtk_alert_dialog_new("¡Careful!");
+    
+    gtk_alert_dialog_set_detail(dialog, 
+        "Make sure you are uploading a directory.");
+    
+    const char *buttons[] = {"Ok", NULL};
+    gtk_alert_dialog_set_buttons(dialog, buttons);
+    gtk_alert_dialog_set_cancel_button(dialog, 0); 
+    
+    gtk_alert_dialog_choose(dialog, parent, NULL, on_show_alert, NULL);
+}
 
 typedef struct{
     GHashTable* collection;
     GtkWidget* file_explorer;
+    GtkWindow* window;
 }DROP_FILES_PARAMETERS;
 
 static gboolean drop_files(
@@ -45,33 +71,43 @@ static gboolean drop_files(
     DROP_FILES_PARAMETERS* data = (DROP_FILES_PARAMETERS*) user_data;
     GHashTable* collection = data->collection;
     GtkWidget* file_explorer = data->file_explorer;
+    GtkWindow* window = data->window;
 
     //cleans the files everytime a new one is dropped
     g_hash_table_remove_all(collection);
 
-    if(G_VALUE_HOLDS(value, GDK_TYPE_FILE_LIST)){ //more than one file
-        GSList *files = g_value_get_boxed(value);
-        for(GSList* l = files; l != NULL; l = l->next){
-            GFile* file = G_FILE(l->data);
-            add_file_to_collection(file, collection);
+        GSList* files = g_value_get_boxed(value);
+        guint length = g_slist_length(files);
+
+        if(length > 1){
+            show_multiple_dirs_warning(window);
+            return FALSE;
         }
-        build_file_hierarchy_widget(collection, GTK_WIDGET(file_explorer));
-        return TRUE;
-    }else if(G_VALUE_HOLDS(value, G_TYPE_FILE)){ //one file
-        GFile* file = g_value_get_object(value);
+
+        GFile* file = G_FILE(files->data);
+
+        char* path = g_file_get_path(file);
+        if(!is_directory(path)){
+            g_free(path);
+            show_only_dirs_warning(window);
+            return FALSE;
+        }
+
+        g_free(path);
+            
         add_file_to_collection(file, collection);
         build_file_hierarchy_widget(collection, GTK_WIDGET(file_explorer));
-        return TRUE;
-    }
-    return FALSE;
+
+    return TRUE;
 }
 
-void set_drop_in_box(GtkWidget* box, GHashTable* collection, GtkWidget* file_explorer){
+void set_drop_in_box(GtkWidget* box, GHashTable* collection, GtkWidget* file_explorer, GtkWindow* window){
     GtkDropTarget* target = gtk_drop_target_new(GDK_TYPE_FILE_LIST, GDK_ACTION_COPY);
 
     DROP_FILES_PARAMETERS* drop_parameters = g_new0(DROP_FILES_PARAMETERS, 1);
     drop_parameters->collection = collection;
     drop_parameters->file_explorer = file_explorer;
+    drop_parameters->window = window;
 
     g_signal_connect_data(target, "drop", G_CALLBACK(drop_files), drop_parameters, free_callback_data, 0);
     gtk_widget_add_controller(box, GTK_EVENT_CONTROLLER(target));

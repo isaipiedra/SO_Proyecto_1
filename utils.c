@@ -8,6 +8,18 @@ void free_callback_data(gpointer data, GClosure *closure) {
     g_free(data);
 }
 
+void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data) {
+    GtkAlertDialog *alert = GTK_ALERT_DIALOG(source_object);
+    GError *error = NULL;
+    (void) user_data;
+
+    gtk_alert_dialog_choose_finish(alert, res, &error);
+    
+    if (error) {
+        g_error_free(error);
+    }
+}
+
 void clear_box(GtkBox *box) {
     GtkWidget *child;
     while ((child = gtk_widget_get_first_child(GTK_WIDGET(box))) != NULL) {
@@ -110,4 +122,11 @@ bool is_valid_file_path(const char* path) {
     }
 
     return true;
+}
+
+bool is_directory(const char* path){
+    struct stat s;
+    if(stat(path,&s) == 0)
+        if( s.st_mode & S_IFDIR ) return true;
+    return false;
 }
