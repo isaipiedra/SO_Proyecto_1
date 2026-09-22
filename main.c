@@ -16,22 +16,23 @@ GObject* window = NULL;
 static GtkFileDialog* file_dialog = NULL;
 static GtkFileDialog* jix_file_dialog = NULL;
 
-
 extern GtkLabel* lbl_output_folder_name;
 
 GFile* decompress_selected_file = NULL;
 
+int page_index = 1;
+static GObject* title = NULL;
+
 typedef struct{
     GtkWidget* layout_holder;
-    int child;
-}ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS;
+    int page;
+}NAV_PARAMETERS;
 
-static void on_toggle_mode_button_clicked(GtkWidget* button, gpointer user_data){
+static void navigate(GtkWidget* button, gpointer user_data){
     (void) button;
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS * parameters = 
-        (ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS*) user_data;
+    NAV_PARAMETERS * parameters = (NAV_PARAMETERS*) user_data;
 
-    int child = parameters->child;
+    int child = parameters->page;
     GtkWidget* layout_holder = parameters->layout_holder;
     GtkWidget* layout = gtk_widget_get_first_child(layout_holder);
     int i = 1;
@@ -44,49 +45,19 @@ static void on_toggle_mode_button_clicked(GtkWidget* button, gpointer user_data)
         i++;
     }
 }
+
+
+
 static void set_up_widgets(GtkBuilder* builder){
 
     GdkCursor* pointer_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
     window = gtk_builder_get_object(builder, "window");
 
-    // ------------- header mode files -------------
-
-    GObject* btn_compress_mode = gtk_builder_get_object(builder, "btn_compress_mode");
-    GObject* btn_decompress_mode = gtk_builder_get_object(builder, "btn_decompress_mode");
-
-    gtk_widget_set_cursor(GTK_WIDGET(btn_compress_mode), pointer_cursor);
-    gtk_widget_set_cursor(GTK_WIDGET(btn_decompress_mode), pointer_cursor);
-
-    gtk_toggle_button_set_group(GTK_TOGGLE_BUTTON(btn_compress_mode), GTK_TOGGLE_BUTTON(btn_decompress_mode));
-
+    // ------------- header -------------
+    title = gtk_builder_get_object(builder, "lbl_title");
     GObject* layout_holder = gtk_builder_get_object(builder, "layout_holder");
 
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS* on_toggle_compress_mode_parameters = 
-        g_new0(ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS, 1);
-
-    on_toggle_compress_mode_parameters->layout_holder = GTK_WIDGET(layout_holder);
-    on_toggle_compress_mode_parameters->child = 1;
-    g_signal_connect_data(
-        btn_compress_mode, 
-        "toggled", 
-        G_CALLBACK(on_toggle_mode_button_clicked), 
-        on_toggle_compress_mode_parameters,
-        free_callback_data, 0
-    );
-
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS* on_toggle_decompress_mode_parameters = 
-        g_new0(ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS, 1);
-
-    on_toggle_decompress_mode_parameters->layout_holder = GTK_WIDGET(layout_holder);
-    on_toggle_decompress_mode_parameters->child = 2;
-    g_signal_connect_data(
-        btn_decompress_mode, 
-        "toggled", 
-        G_CALLBACK(on_toggle_mode_button_clicked), 
-        on_toggle_decompress_mode_parameters,
-        free_callback_data, 0
-    );
 
     // ------------- file explorer -------------
 
@@ -172,43 +143,7 @@ static void set_up_widgets(GtkBuilder* builder){
     gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir), pointer_cursor);
 
     //======================= Decompresser =======================
-    // ------------- drag and drop -------------
 
-    file_collection = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-    GObject *dnd_box_decompress = gtk_builder_get_object(builder, "box_dnd_container_decomp");
-    GObject* bottom_section = gtk_builder_get_object(builder, "bottom_section_decomp");
-    GObject* lbl_selected_file_name = gtk_builder_get_object(builder, "lbl_selected_decomp_file");
-    GObject* entry_decomp_output_path = gtk_builder_get_object(builder, "entry_output_name_decomp");
-    set_drop_to_decompress_in_box(
-        GTK_WIDGET(dnd_box_decompress), 
-        GTK_WIDGET(bottom_section), 
-        GTK_WINDOW(window),
-        GTK_LABEL(lbl_selected_file_name),
-        &decompress_selected_file,
-        GTK_ENTRY(entry_decomp_output_path)
-    );
-
-    // ------------- browse jix file button -------------
-    
-    jix_file_dialog = gtk_file_dialog_new();
-    GObject* btn_browse_jix_file = gtk_builder_get_object(builder, "btn_browse_jix_file");
-    BROWSE_FOR_JIX_FILE_PARAMETERS* open_jix_file_dialog_parameters = g_new0(BROWSE_FOR_JIX_FILE_PARAMETERS, 1); 
-    
-    open_jix_file_dialog_parameters->window = GTK_WINDOW(window);
-    open_jix_file_dialog_parameters->dialog = jix_file_dialog;
-    open_jix_file_dialog_parameters->display_widget = GTK_WIDGET(bottom_section);
-    open_jix_file_dialog_parameters->result_file = &decompress_selected_file;
-    open_jix_file_dialog_parameters->lbl_selected_file_name = GTK_LABEL(lbl_selected_file_name);
-    open_jix_file_dialog_parameters->entry_output_path = GTK_ENTRY(entry_decomp_output_path);
-
-    g_signal_connect_data(
-        btn_browse_jix_file, "clicked", 
-        G_CALLBACK(browse_for_JIX_file), 
-        open_jix_file_dialog_parameters, 
-        free_callback_data, 0
-    );
-
-    gtk_widget_set_cursor(GTK_WIDGET(btn_browse_jix_file), pointer_cursor);
 
 }
 

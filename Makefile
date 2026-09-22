@@ -2,7 +2,7 @@
 CC = gcc
 
 # Source files
-SRC = main.c dragAndDrop.c fileExplorer.c utils.c outputNameEntry.c huffmanSerial.c huffmanParallel.c huffmanConcurrent.c huffmanCore.c huffmanIO.c
+SRC = main.c dragAndDrop.c fileExplorer.c utils.c outputNameEntry.c huffmanSerial.c huffmanParallel.c huffmanConcurrent.c huffmanCore.c huffmanIO.c navigate.c
 
 # Output executable
 TARGET = proyecto_1

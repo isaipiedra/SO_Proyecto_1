@@ -11,26 +11,43 @@
       <object class="GtkBox" id="layout_holder">
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="box_header">
+            <property name="valign">center</property>
             <child>
-              <object class="GtkToggleButton" id="btn_compress_mode">
-                <property name="active">True</property>
+              <object class="GtkBox">
+                <property name="homogeneous">True</property>
+                <property name="width-request">100</property>
+                <child>
+                  <object class="GtkButton" id="btn_back">
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="height-request">32</property>
+                        <property name="width-request">32</property>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="btn_back"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_title">
+                <property name="halign">start</property>
                 <property name="hexpand">True</property>
                 <property name="label">Compress</property>
+                <property name="valign">center</property>
                 <style>
-                  <class name="btn_compress_mode"/>
+                  <class name="lbl_title"/>
                 </style>
               </object>
             </child>
-            <child>
-              <object class="GtkToggleButton" id="btn_decompress_mode">
-                <property name="hexpand">True</property>
-                <property name="label">Decompress</property>
-                <style>
-                  <class name="btn_decompress_mode"/>
-                </style>
-              </object>
-            </child>
+            <style>
+              <class name="box_header"/>
+            </style>
           </object>
         </child>
         <child>
@@ -221,95 +238,24 @@
                     <property name="orientation">vertical</property>
                     <property name="vexpand">True</property>
                     <child>
-                      <object class="GtkBox" id="box_dnd_container_decomp">
-                        <child>
-                          <object class="GtkBox" id="dnd_content_decomp">
-                            <property name="halign">center</property>
-                            <property name="orientation">vertical</property>
-                            <property name="valign">center</property>
-                            <property name="vexpand">True</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="file">images/download.png</property>
-                                <property name="height-request">128</property>
-                                <property name="margin-bottom">10</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="label">Drag and drop your jix file</property>
-                                <style>
-                                  <class name="lbl_initial_msg"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <child>
-                                  <object class="GtkSeparator">
-                                    <property name="hexpand">True</property>
-                                    <property name="opacity">0.5</property>
-                                    <property name="valign">center</property>
-                                    <style>
-                                      <class name="separator"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="label">OR</property>
-                                    <style>
-                                      <class name="lbl_or"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSeparator">
-                                    <property name="hexpand">True</property>
-                                    <property name="opacity">0.5</property>
-                                    <property name="valign">center</property>
-                                    <style>
-                                      <class name="separator"/>
-                                    </style>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkButton" id="btn_browse_jix_file">
-                                <property name="label" translatable="yes">Browse for File</property>
-                                <property name="name">btn_open_file_explorer</property>
-                                <style>
-                                  <class name="btn_open_file_explorer"/>
-                                </style>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="box_dnd_container"/>
-                        </style>
-                      </object>
-                    </child>
-                    <child>
                       <object class="GtkBox" id="bottom_section_decomp">
                         <property name="orientation">vertical</property>
-                        <property name="visible">False</property>
                         <child>
                           <object class="GtkBox" id="box_selected_file">
                             <property name="halign">center</property>
                             <child>
                               <object class="GtkBox" id="comp_selected_file">
                                 <property name="halign">center</property>
+                                <property name="orientation">vertical</property>
                                 <property name="valign">center</property>
                                 <property name="vexpand">True</property>
                                 <child>
                                   <object class="GtkImage">
                                     <property name="file">images/box.png</property>
-                                    <property name="height-request">32</property>
+                                    <property name="height-request">128</property>
                                     <property name="hexpand">True</property>
                                     <property name="vexpand">True</property>
-                                    <property name="width-request">32</property>
+                                    <property name="width-request">128</property>
                                   </object>
                                 </child>
                                 <child>
