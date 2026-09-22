@@ -34,3 +34,19 @@ void on_output_entry_focus_leave(GtkEventControllerFocus* self, gpointer user_da
         gtk_entry_buffer_set_text(buffer, OUTPUT_FOLDER_DEFAULT_NAME, strlen(OUTPUT_FOLDER_DEFAULT_NAME));
     }
 }
+
+void on_output_entry_decomp_focus_leave(GtkEventControllerFocus* self, gpointer user_data){
+    (void) self;
+    ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS* parameters = (ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS*) user_data;
+    GtkEntry* entry = parameters->entry;
+    GtkWindow* window = parameters->window;
+
+    GtkEntryBuffer* buffer = gtk_entry_get_buffer(entry);
+    const char* text = gtk_entry_buffer_get_text(buffer);
+
+    if(!is_valid_file_path(text)){
+        show_warning_dialog(window, "The saving path is not valid, resorting to default path");
+        gtk_entry_buffer_set_text(buffer, OUTPUT_FOLDER_DEFAULT_NAME, strlen(OUTPUT_FOLDER_DEFAULT_NAME));
+    }
+}
+

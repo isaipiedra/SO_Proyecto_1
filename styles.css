@@ -151,9 +151,12 @@
     padding: 20px;
 }
 
-.box_export_section, .box_selected_file{
+.box_selected_file{
+    margin: 50px;
+}
+.box_export_section{
     margin: 100px;
-    margin-top: 0;
+    margin-top: 0px;
 }
 .box_output_name{
     margin-top: 10px;
@@ -163,5 +166,42 @@
 .lbl_selected_decomp_file{
     font-size: 25px;
     font-weight: 500;
-    margin-left: 5px;
+    margin-top: 10px;
+}
+
+.box_stats_container{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    padding: 40px 60px;
+    margin: 50px;
+}
+
+.lbl_stats_title{
+    font-size: 25px;
+    font-weight: 600;
+    color: rgb(9, 76, 152);
+}
+
+.lbl_stats_header{
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(9, 76, 152);
+    padding-bottom: 8px;
+    border-style: none none solid none;
+    border-width: 2px;
+    border-color: rgb(9, 76, 152);
+}
+
+.lbl_stats_row{
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(9, 76, 152);
+    padding-right: 20px;
+}
+
+.lbl_stats_value{
+    font-size: 15px;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    min-width: 90px;
 }

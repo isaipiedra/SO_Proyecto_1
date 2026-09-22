@@ -8,13 +8,13 @@
 #include "huffmanSerial.h"
 #include "huffmanParallel.h"
 #include "huffmanConcurrent.h"
+#include "navigate.h"
 
 GtkBuilder *builder;
 
 static GHashTable* file_collection = NULL;
 GObject* window = NULL;
 static GtkFileDialog* file_dialog = NULL;
-static GtkFileDialog* jix_file_dialog = NULL;
 
 extern GtkLabel* lbl_output_folder_name;
 
@@ -22,31 +22,6 @@ GFile* decompress_selected_file = NULL;
 
 int page_index = 1;
 static GObject* title = NULL;
-
-typedef struct{
-    GtkWidget* layout_holder;
-    int page;
-}NAV_PARAMETERS;
-
-static void navigate(GtkWidget* button, gpointer user_data){
-    (void) button;
-    NAV_PARAMETERS * parameters = (NAV_PARAMETERS*) user_data;
-
-    int child = parameters->page;
-    GtkWidget* layout_holder = parameters->layout_holder;
-    GtkWidget* layout = gtk_widget_get_first_child(layout_holder);
-    int i = 1;
-    while ((layout = gtk_widget_get_next_sibling(layout))){
-        if(i == child){
-            gtk_widget_set_visible(layout, TRUE);
-        }else{
-            gtk_widget_set_visible(layout, FALSE);
-        }
-        i++;
-    }
-}
-
-
 
 static void set_up_widgets(GtkBuilder* builder){
 
@@ -56,7 +31,6 @@ static void set_up_widgets(GtkBuilder* builder){
 
     // ------------- header -------------
     title = gtk_builder_get_object(builder, "lbl_title");
-    GObject* layout_holder = gtk_builder_get_object(builder, "layout_holder");
 
 
     // ------------- file explorer -------------
@@ -144,7 +118,48 @@ static void set_up_widgets(GtkBuilder* builder){
 
     //======================= Decompresser =======================
 
+    set_up_navigation(builder);
 
+    // ------------- entry for output folder name -------------
+
+    GObject* entry_output_decomp = gtk_builder_get_object(builder, "entry_output_name_decomp");
+    g_signal_connect(entry_output_decomp, "changed", G_CALLBACK(on_update_output_entry), &lbl_output_folder_name);
+
+    GtkEventController* output_entry_decomp_focus_controller = gtk_event_controller_focus_new();
+    ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS* on_focus_leave_decomp_params = g_new0(ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS, 1);
+    on_focus_leave_decomp_params->entry = GTK_ENTRY(entry_output_decomp);
+    on_focus_leave_decomp_params->window = GTK_WINDOW(window); 
+
+    g_signal_connect_data(
+        output_entry_decomp_focus_controller, 
+        "leave", 
+        G_CALLBACK(on_output_entry_decomp_focus_leave), 
+        on_focus_leave_decomp_params,
+        free_callback_data,
+        0
+    );
+
+    gtk_widget_add_controller(GTK_WIDGET(entry_output_decomp), output_entry_decomp_focus_controller);
+
+    // ------------- button to select output dir -------------
+
+    char* result_output_dir_decomp = NULL;
+    GObject* btn_output_browse_dir_decomp = gtk_builder_get_object(builder, "btn_output_browse_dir_decomp");
+    BROWSE_FOR_OUTPUT_DIR_PARAMETERS* browse_for_output_dir_decomp_parameters = g_new0(BROWSE_FOR_OUTPUT_DIR_PARAMETERS, 1); 
+    
+    browse_for_output_dir_decomp_parameters->dialog = output_name_file_dialog;
+    browse_for_output_dir_decomp_parameters->window = GTK_WINDOW(window);
+    browse_for_output_dir_decomp_parameters->selected_file = result_output_dir_decomp;
+    browse_for_output_dir_decomp_parameters->output_entry = GTK_ENTRY(entry_output_decomp);
+
+    g_signal_connect_data(
+        btn_output_browse_dir_decomp, "clicked", 
+        G_CALLBACK(browse_for_output_dir), 
+        browse_for_output_dir_decomp_parameters, 
+        free_callback_data, 0
+    );
+
+    gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir_decomp), pointer_cursor);
 }
 
 static void activate(GtkApplication *app) {
