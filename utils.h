@@ -5,7 +5,7 @@
 //wrapper fuction that matches the singnature
 void free_callback_data(gpointer data, GClosure *closure);
 
-void on_show_alert(GObject *source_object, GAsyncResult *res, gpointer user_data);
+void show_warning_dialog(GtkWindow *parent, char* message);
 
 void clear_box(GtkBox *box);
 
@@ -16,3 +16,5 @@ bool is_valid_file_name(const char* name);
 bool is_valid_file_path(const char* path);
 
 bool is_directory(const char* path);
+
+bool has_extension(const char* path, const char* extension);

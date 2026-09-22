@@ -8,6 +8,7 @@
 #include "huffmanSerial.h"
 #include "huffmanParallel.h"
 #include "huffmanConcurrent.h"
+#include "navigate.h"
 
 GtkBuilder *builder;
 
@@ -17,74 +18,20 @@ static GtkFileDialog* file_dialog = NULL;
 
 extern GtkLabel* lbl_output_folder_name;
 
-typedef struct{
-    GtkWidget* layout_holder;
-    int child;
-}ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS;
+GFile* decompress_selected_file = NULL;
 
-static void on_toggle_mode_button_clicked(GtkWidget* button, gpointer user_data){
-    (void) button;
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS * parameters = 
-        (ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS*) user_data;
+int page_index = 1;
+static GObject* title = NULL;
 
-    int child = parameters->child;
-    GtkWidget* layout_holder = parameters->layout_holder;
-    GtkWidget* layout = gtk_widget_get_first_child(layout_holder);
-    int i = 1;
-    while ((layout = gtk_widget_get_next_sibling(layout))){
-        if(i == child){
-            gtk_widget_set_visible(layout, TRUE);
-        }else{
-            gtk_widget_set_visible(layout, FALSE);
-        }
-        i++;
-    }
-        printf("\n");
-
-}
 static void set_up_widgets(GtkBuilder* builder){
 
     GdkCursor* pointer_cursor = gdk_cursor_new_from_name("pointer", NULL);
 
     window = gtk_builder_get_object(builder, "window");
 
-    // ------------- header mode files -------------
+    // ------------- header -------------
+    title = gtk_builder_get_object(builder, "lbl_title");
 
-    GObject* btn_compress_mode = gtk_builder_get_object(builder, "btn_compress_mode");
-    GObject* btn_decompress_mode = gtk_builder_get_object(builder, "btn_decompress_mode");
-
-    gtk_widget_set_cursor(GTK_WIDGET(btn_compress_mode), pointer_cursor);
-    gtk_widget_set_cursor(GTK_WIDGET(btn_decompress_mode), pointer_cursor);
-
-    gtk_toggle_button_set_group(GTK_TOGGLE_BUTTON(btn_compress_mode), GTK_TOGGLE_BUTTON(btn_decompress_mode));
-
-    GObject* layout_holder = gtk_builder_get_object(builder, "layout_holder");
-
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS* on_toggle_compress_mode_parameters = 
-        g_new0(ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS, 1);
-
-    on_toggle_compress_mode_parameters->layout_holder = GTK_WIDGET(layout_holder);
-    on_toggle_compress_mode_parameters->child = 1;
-    g_signal_connect_data(
-        btn_compress_mode, 
-        "toggled", 
-        G_CALLBACK(on_toggle_mode_button_clicked), 
-        on_toggle_compress_mode_parameters,
-        free_callback_data, 0
-    );
-
-    ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS* on_toggle_decompress_mode_parameters = 
-        g_new0(ON_TOGGLE_MODE_BUTTON_CLICKED_PARAMETERS, 1);
-
-    on_toggle_decompress_mode_parameters->layout_holder = GTK_WIDGET(layout_holder);
-    on_toggle_decompress_mode_parameters->child = 2;
-    g_signal_connect_data(
-        btn_decompress_mode, 
-        "toggled", 
-        G_CALLBACK(on_toggle_mode_button_clicked), 
-        on_toggle_decompress_mode_parameters,
-        free_callback_data, 0
-    );
 
     // ------------- file explorer -------------
 
@@ -96,9 +43,9 @@ static void set_up_widgets(GtkBuilder* builder){
 
     file_collection = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     GtkWidget *dnd_box = GTK_WIDGET(gtk_builder_get_object(builder, "box_dnd_container"));
-    set_drop_in_box(dnd_box, file_collection, GTK_WIDGET(box_file_explorer_container), GTK_WINDOW(window));
+    set_drop_to_compress_in_box(dnd_box, file_collection, GTK_WIDGET(box_file_explorer_container), GTK_WINDOW(window));
 
-    // ------------- browse button -------------
+    // ------------- browse dir button -------------
     
     file_dialog = gtk_file_dialog_new();
     char* result_file = NULL;
@@ -168,8 +115,51 @@ static void set_up_widgets(GtkBuilder* builder){
     );
 
     gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir), pointer_cursor);
-    
 
+    //======================= Decompresser =======================
+
+    set_up_navigation(builder);
+
+    // ------------- entry for output folder name -------------
+
+    GObject* entry_output_decomp = gtk_builder_get_object(builder, "entry_output_name_decomp");
+    g_signal_connect(entry_output_decomp, "changed", G_CALLBACK(on_update_output_entry), &lbl_output_folder_name);
+
+    GtkEventController* output_entry_decomp_focus_controller = gtk_event_controller_focus_new();
+    ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS* on_focus_leave_decomp_params = g_new0(ON_OUTPUT_ENTRY_DECOMP_FOCUS_LEAVE_PARAMETERS, 1);
+    on_focus_leave_decomp_params->entry = GTK_ENTRY(entry_output_decomp);
+    on_focus_leave_decomp_params->window = GTK_WINDOW(window); 
+
+    g_signal_connect_data(
+        output_entry_decomp_focus_controller, 
+        "leave", 
+        G_CALLBACK(on_output_entry_decomp_focus_leave), 
+        on_focus_leave_decomp_params,
+        free_callback_data,
+        0
+    );
+
+    gtk_widget_add_controller(GTK_WIDGET(entry_output_decomp), output_entry_decomp_focus_controller);
+
+    // ------------- button to select output dir -------------
+
+    char* result_output_dir_decomp = NULL;
+    GObject* btn_output_browse_dir_decomp = gtk_builder_get_object(builder, "btn_output_browse_dir_decomp");
+    BROWSE_FOR_OUTPUT_DIR_PARAMETERS* browse_for_output_dir_decomp_parameters = g_new0(BROWSE_FOR_OUTPUT_DIR_PARAMETERS, 1); 
+    
+    browse_for_output_dir_decomp_parameters->dialog = output_name_file_dialog;
+    browse_for_output_dir_decomp_parameters->window = GTK_WINDOW(window);
+    browse_for_output_dir_decomp_parameters->selected_file = result_output_dir_decomp;
+    browse_for_output_dir_decomp_parameters->output_entry = GTK_ENTRY(entry_output_decomp);
+
+    g_signal_connect_data(
+        btn_output_browse_dir_decomp, "clicked", 
+        G_CALLBACK(browse_for_output_dir), 
+        browse_for_output_dir_decomp_parameters, 
+        free_callback_data, 0
+    );
+
+    gtk_widget_set_cursor(GTK_WIDGET(btn_output_browse_dir_decomp), pointer_cursor);
 }
 
 static void activate(GtkApplication *app) {

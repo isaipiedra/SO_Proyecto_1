@@ -47,11 +47,29 @@ typedef struct{
 void browse_for_dir(GtkButton* button, gpointer user_data);
 
 typedef struct{
+    GtkWindow* window;
+    GtkFileDialog* dialog;
+    GtkWidget* display_widget;
+    GFile** result_file;
+    GtkLabel* lbl_selected_file_name;
+    GtkEntry* entry_output_path;
+}BROWSE_FOR_JIX_FILE_PARAMETERS;
+
+void browse_for_JIX_file(GtkButton* button, gpointer user_data);
+
+typedef struct{
     GtkFileDialog* dialog;
     GtkWindow* window;
     char* selected_file;
     GtkEntry* output_entry;
 }BROWSE_FOR_OUTPUT_DIR_PARAMETERS;
 void browse_for_output_dir(GtkButton* button, gpointer user_data);
+
+void show_export_section(
+    GtkWidget* bottom_section, 
+    GtkLabel* lbl_file_name, 
+    char* file_name, 
+    GtkEntry* output_entry
+);
 
 #endif

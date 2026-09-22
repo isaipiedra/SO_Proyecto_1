@@ -140,6 +140,7 @@ GtkWidget* create_root_widget(const char *name, GList *children, int depth){
     holder = gtk_widget_get_first_child(holder); // header
     holder = gtk_widget_get_first_child(holder); // arrow
     holder = gtk_widget_get_next_sibling(holder); // icon
+    gtk_picture_set_filename(GTK_PICTURE(holder), "images/box_small.png");
     holder = gtk_widget_get_next_sibling(holder); // label
 
     lbl_output_folder_name = GTK_LABEL(holder);
@@ -220,7 +221,7 @@ FileNode *build_tree_from_hashtable(GHashTable *files) {
     return file_node_new_root(children);
 }
 
-static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
+static void on_dir_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
     GtkFileDialog* dialog = GTK_FILE_DIALOG(source);
     GError* error = NULL;
     GFile* file = gtk_file_dialog_select_folder_finish(dialog, result, &error);
@@ -243,6 +244,42 @@ static void on_file_open_ready(GObject* source, GAsyncResult* result, gpointer u
     }
 
     build_file_hierarchy_widget(collection, file_explorer);
+}
+
+static void on_JIX_file_open_ready(GObject* source, GAsyncResult* result, gpointer user_data) {
+
+    GError* error = NULL;
+    GtkFileDialog* dialog = GTK_FILE_DIALOG(source);
+    GFile* file = gtk_file_dialog_open_finish(dialog, result, &error);
+
+    if(!file){
+        return;
+    }
+    if (error) {
+        g_error_free(error);
+        return;
+    }
+
+    BROWSE_FOR_JIX_FILE_PARAMETERS* params = (BROWSE_FOR_JIX_FILE_PARAMETERS*) user_data;
+    GtkWindow* window = params->window;
+    GtkWidget* bottom_section = params->display_widget;
+    GtkLabel* lbl_selected_file_name = params->lbl_selected_file_name;
+    GtkEntry* entry_output_path = params->entry_output_path;
+
+    char* basename = g_file_get_basename(file);
+
+    if(!has_extension(basename, ".jix")){
+        g_free(basename);
+        show_warning_dialog(window, "Only .jix files are allowed");
+        return;
+    }
+    
+    params->result_file = &file; //make pointer point to the file selected
+    
+    show_export_section(bottom_section, lbl_selected_file_name, basename, entry_output_path);    
+    g_free(basename);
+
+    return;
 }
 
 static void on_output_dir_selected(GObject* source, GAsyncResult* result, gpointer user_data) {
@@ -273,8 +310,30 @@ void browse_for_dir(GtkButton* button, gpointer user_data) {
     gtk_file_dialog_select_folder(parameters->dialog,
                          parameters->window,
                          NULL,                
-                         on_file_open_ready,
+                         on_dir_open_ready,
                          parameters);         
+}
+
+void browse_for_JIX_file(GtkButton* button, gpointer user_data) {
+
+    (void) button;
+
+    BROWSE_FOR_JIX_FILE_PARAMETERS* parameters = (BROWSE_FOR_JIX_FILE_PARAMETERS*) user_data;
+    GtkFileDialog* dialog = parameters->dialog;
+    GtkWindow* window = parameters->window;
+
+    //filter to only show .jix files
+    GtkFileFilter* filter = gtk_file_filter_new();
+    gtk_file_filter_add_suffix(filter, "jix");
+    gtk_file_dialog_set_default_filter(dialog, filter);
+
+    gtk_file_dialog_open(
+        dialog,
+        window,
+        NULL,
+        on_JIX_file_open_ready,
+        parameters
+    );
 }
 
 void browse_for_output_dir(GtkButton* button, gpointer user_data){
@@ -288,3 +347,16 @@ void browse_for_output_dir(GtkButton* button, gpointer user_data){
                          parameters);   
 }
 
+void show_export_section(
+    GtkWidget* bottom_section, 
+    GtkLabel* lbl_file_name, 
+    char* file_name, 
+    GtkEntry* output_entry
+){
+    gtk_label_set_text(lbl_file_name, file_name);
+    
+    GtkEntryBuffer* buffer = gtk_entry_get_buffer(output_entry);
+    gtk_entry_buffer_set_text(buffer, file_name, strlen(file_name)-4);
+    
+    gtk_widget_set_visible(bottom_section, TRUE);
+}

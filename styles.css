@@ -12,8 +12,13 @@
 .box_file_explorer_container,
 .box_file_explorer,
 .box_output_name,
-.btn_decompress_mode,
-.btn_compress_mode
+.box_export_section,
+.box_selected_file,
+.lbl_selected_decomp_file,
+.lbl_title,
+.box_header,
+.btn_back,
+.back_btn_container
 {
     background-image: none;
     background-color: transparent;
@@ -23,13 +28,28 @@
     padding: 0px;
     margin: 0px;
 }
+.box_header{
+    margin-top: 25px;
+    margin-right: 25px;
+    margin-bottom: 0px;
+}
+.btn_back
+{
+    background-image: url("images/back.png");
+}
 
+.btn_back:hover
+{
+    background-image: url("images/back-hover.png");
+}
+
+.lbl_title{
+    font-size: 30px;
+    font-weight: 600;
+    color: rgb(9, 76, 152);
+}
 .btn_open_file_explorer,
-.btn_compile,
-.btn_decompress_mode:checked,
-.btn_compress_mode:checked,
-.btn_decompress_mode,
-.btn_compress_mode
+.btn_compile
 {
     background-color: rgb(9, 76, 152);
     color: white;
@@ -57,21 +77,6 @@
     margin-right: 17px;
 }
 
-.btn_decompress_mode:checked,
-.btn_compress_mode:checked,
-.btn_decompress_mode,
-.btn_compress_mode
-{
-    border-radius: 0px;
-}
-
-.btn_decompress_mode,
-.btn_compress_mode
-{
-    background-color: transparent;
-    color: rgb(9, 76, 152);
-}
-
 .lbl_initial_msg{
   	font-weight: normal;
     font-size: 20px;
@@ -85,6 +90,7 @@
     border-color: rgb(9, 76, 152);
     padding: 50px;
     margin: 100px;
+    margin-top: 50px;
 }
 .box_dnd_container-hover{
     background-color: rgb(175, 212, 254);
@@ -93,6 +99,7 @@
     border-width: 5px;
     border-color: rgb(9, 76, 152);
     margin: 100px;
+    margin-top: 50px;
 }
 
 .separator{
@@ -135,16 +142,66 @@
     margin-left: 0px;
 }
 
-.box_file_explorer_container{
+.box_file_explorer_container, .box_export_section{
     background-color: rgb(213, 231, 253);
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 100px;
     margin-right: 100px;
     border-radius: 20px;
     padding: 20px;
 }
 
+.box_selected_file{
+    margin: 50px;
+}
+.box_export_section{
+    margin: 100px;
+    margin-top: 0px;
+}
 .box_output_name{
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.lbl_selected_decomp_file{
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.box_stats_container{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    padding: 40px 60px;
+    margin: 50px;
+}
+
+.lbl_stats_title{
+    font-size: 25px;
+    font-weight: 600;
+    color: rgb(9, 76, 152);
+}
+
+.lbl_stats_header{
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(9, 76, 152);
+    padding-bottom: 8px;
+    border-style: none none solid none;
+    border-width: 2px;
+    border-color: rgb(9, 76, 152);
+}
+
+.lbl_stats_row{
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(9, 76, 152);
+    padding-right: 20px;
+}
+
+.lbl_stats_value{
+    font-size: 15px;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    min-width: 90px;
 }
