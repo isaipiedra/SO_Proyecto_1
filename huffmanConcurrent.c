@@ -24,6 +24,7 @@ static void* compress_worker(void *arg) {
     write_compressed_file(a->output_file, cf);
     a->stats->total_original_bytes += cf->original_size;
     a->stats->total_compressed_bytes += cf->compressed_size;
+    a->stats->files_verified++;
     pthread_mutex_unlock(a->write_mutex);
 
     free_compressed_file(cf);

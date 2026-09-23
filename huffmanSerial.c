@@ -46,6 +46,7 @@ CompressionStats huffman_compression_serial(const char *directory_path, const ch
 
         stats.total_original_bytes += cf->original_size;
         stats.total_compressed_bytes += cf->compressed_size;
+        stats.files_verified++;
 
         free_compressed_file(cf);
     }

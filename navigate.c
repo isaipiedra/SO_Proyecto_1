@@ -251,8 +251,14 @@ static void on_compress_clicked(GtkButton* button, gpointer user_data){
         double ratio = stats[i].total_original_bytes > 0
             ? (double) stats[i].total_compressed_bytes / stats[i].total_original_bytes
             : 0.0;
-        double speedup = times[0] > 0.0
-            ? 100.0 * (times[0] - times[i]) / times[0]
+        /*
+         * Express speedup as performance relative to Serial:
+         * Serial = 100%, faster than Serial > 100%, slower than Serial < 100%.
+         * This avoids negative percentages while preserving the information
+         * that an algorithm was slower than the baseline.
+         */
+        double speedup = (times[0] > 0.0 && times[i] > 0.0)
+            ? 100.0 * times[0] / times[i]
             : 0.0;
 
         set_percent(labels->health[i], health);
@@ -313,8 +319,14 @@ static void on_decompress_clicked(GtkButton* button, gpointer user_data){
     // fill in the decompression-related rows of the stats table
     STATS_LABELS* labels = parameters->stats;
     for(int i = 0; i < ALGO_COUNT; i++){
-        double speedup = times[0] > 0.0
-            ? 100.0 * (times[0] - times[i]) / times[0]
+        /*
+         * Express speedup as performance relative to Serial:
+         * Serial = 100%, faster than Serial > 100%, slower than Serial < 100%.
+         * This avoids negative percentages while preserving the information
+         * that an algorithm was slower than the baseline.
+         */
+        double speedup = (times[0] > 0.0 && times[i] > 0.0)
+            ? 100.0 * times[0] / times[i]
             : 0.0;
 
         set_seconds(labels->decomp_time[i], times[i]);

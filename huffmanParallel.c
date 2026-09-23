@@ -107,6 +107,7 @@ CompressionStats huffman_compression_parallel(const char *directory_path, const 
             write_compressed_file(output_file, cf);
             stats.total_original_bytes += cf->original_size;
             stats.total_compressed_bytes += cf->compressed_size;
+            stats.files_verified++;
             free_compressed_file(cf);
         } else {
             fprintf(stderr, "Error: failed to read block from child %d\n", i);
