@@ -1,4 +1,25 @@
-.btn_open_file_explorer{
+.btn_open_file_explorer, 
+.btn_compile,
+.lbl_initial_msg,
+.box_dnd_container,
+.separator,
+.lbl_or,
+.folder-button,
+.folder-icon,
+.file-row,
+.file-icon,
+.folder-arrow,
+.box_file_explorer_container,
+.box_file_explorer,
+.box_output_name,
+.box_export_section,
+.box_selected_file,
+.lbl_selected_decomp_file,
+.lbl_title,
+.box_header,
+.btn_back,
+.back_btn_container
+{
     background-image: none;
     background-color: transparent;
     border: none;
@@ -7,9 +28,29 @@
     padding: 0px;
     margin: 0px;
 }
+.box_header{
+    margin-top: 25px;
+    margin-right: 25px;
+    margin-bottom: 0px;
+}
+.btn_back
+{
+    background-image: url("images/back.png");
+}
 
-.btn_open_file_explorer{
-    background-image: none;
+.btn_back:hover
+{
+    background-image: url("images/back-hover.png");
+}
+
+.lbl_title{
+    font-size: 30px;
+    font-weight: 600;
+    color: rgb(9, 76, 152);
+}
+.btn_open_file_explorer,
+.btn_compile
+{
     background-color: rgb(9, 76, 152);
     color: white;
     padding: 10px;
@@ -19,14 +60,21 @@
     font-size: 20px;
 }
 
-.lbl_initial_msg{
+.btn_open_file_explorer:hover , .btn_compile:hover{
     background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
+    background-color: rgb(31, 129, 241);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border-width: 0px;
+  	font-weight: bold;
+    font-size: 20px;
+}
+
+.btn_compile, .btn_compile:hover{
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-right: 17px;
 }
 
 .lbl_initial_msg{
@@ -35,22 +83,14 @@
 }
 
 .box_dnd_container{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
-
-.box_dnd_container{
     background-color: rgb(213, 231, 253);
     border-radius: 20px;
     border-style: dashed;
     border-width: 5px;
     border-color: rgb(9, 76, 152);
+    padding: 50px;
     margin: 100px;
+    margin-top: 50px;
 }
 .box_dnd_container-hover{
     background-color: rgb(175, 212, 254);
@@ -59,15 +99,7 @@
     border-width: 5px;
     border-color: rgb(9, 76, 152);
     margin: 100px;
-}
-.separator{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
+    margin-top: 50px;
 }
 
 .separator{
@@ -76,99 +108,100 @@
 }
 
 .lbl_or{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
-.lbl_or{
     margin-top: 15px;
     margin-bottom: 15px;
     margin-left: 10px;
     margin-right: 10px;
 
 }
-.folder-button{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-button{
     margin-bottom: 10px;
 }
-.folder-icon{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-icon{
     margin-right: 15px;
 }
-.file-row{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px; 
-}
+
 .file-row{
     margin-bottom: 10px;
 }
-.file-icon{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .file-icon{
     margin-right: 15px;
 }
-.folder-arrow{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .folder-arrow{
     padding: 5px;
 }
-.box_file_explorer{
-    background-image: none;
-    background-color: transparent;
-    border: none;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 0px;
-    margin: 0px;
-}
+
 .box_file_explorer{
     background-color: rgb(213, 231, 253);
-    border-radius: 20px;
     border-width: 2px;
     border-color: rgb(9, 76, 152);
-    margin-top: 100px;
-    margin-right: 100px;
     margin-left: 0px;
-    margin-bottom: 100px;
-    padding: 20px;
+}
 
+.box_file_explorer_container, .box_export_section{
+    background-color: rgb(213, 231, 253);
+    margin-top: 50px;
+    margin-bottom: 100px;
+    margin-right: 100px;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.box_selected_file{
+    margin: 50px;
+}
+.box_export_section{
+    margin: 100px;
+    margin-top: 0px;
+}
+.box_output_name{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.lbl_selected_decomp_file{
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.box_stats_container{
+    background-color: rgb(213, 231, 253);
+    border-radius: 20px;
+    padding: 40px 60px;
+    margin: 50px;
+}
+
+.lbl_stats_title{
+    font-size: 25px;
+    font-weight: 600;
+    color: rgb(9, 76, 152);
+}
+
+.lbl_stats_header{
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(9, 76, 152);
+    padding-bottom: 8px;
+    border-style: none none solid none;
+    border-width: 2px;
+    border-color: rgb(9, 76, 152);
+}
+
+.lbl_stats_row{
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(9, 76, 152);
+    padding-right: 20px;
+}
+
+.lbl_stats_value{
+    font-size: 15px;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    min-width: 90px;
 }
