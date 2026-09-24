@@ -11,7 +11,6 @@ CompressionStats huffman_compression_serial(const char *directory_path, const ch
 
     DirectoryContent *content = load_directory(directory_path);
     if (!content || content->file_count == 0) {
-        fprintf(stderr, "Error: No .txt files found in directory\n");
         if (content) free_directory_content(content);
         return stats;
     }
@@ -47,6 +46,7 @@ CompressionStats huffman_compression_serial(const char *directory_path, const ch
 
         stats.total_original_bytes += cf->original_size;
         stats.total_compressed_bytes += cf->compressed_size;
+        stats.files_verified++;
 
         free_compressed_file(cf);
     }

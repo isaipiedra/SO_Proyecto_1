@@ -118,7 +118,7 @@ static void set_up_widgets(GtkBuilder* builder){
 
     //======================= Decompresser =======================
 
-    set_up_navigation(builder);
+    set_up_navigation(builder, file_collection);
 
     // ------------- entry for output folder name -------------
 
